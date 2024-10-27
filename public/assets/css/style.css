@@ -1,0 +1,159 @@
+@import url('https://fonts.googleapis.com/css2?family=Markazi+Text:wght@400..700&family=Yrsa:ital,wght@0,300..700;1,300..700&display=swap');
+
+:root {
+    --cor-home: #0B192C;
+    --cor-planta: #000000;
+    --cor-analise: #0B192C;
+    --cor-fonte-home: #FFFFFF;
+    --cor-fonte-home2: #FF6500;
+}
+
+body {
+    height: 100vh;
+    box-sizing: border-box;
+    /* font-family: "Yrsa", sans-serif; */
+}
+
+a {
+    color: var(--cor-fonte-home);
+}
+
+/* NAVBAR */
+#navbarContent {
+    text-transform: uppercase;     
+}
+
+
+#navbarContent .nav-link, .navbarContentClass a {
+    color: #ffffff; 
+    transition: color 0.3s ease; 
+}
+
+#navbarContent .nav-link:hover, .navbarContentClass a:hover {
+    color: #FF6500; 
+}
+
+.btn {
+    margin-left: 10px;
+}
+
+
+/* CONTENT */
+.content-home {
+    text-transform: uppercase;
+    text-align: center;
+}
+
+.content-home h1 {
+    color: var(--cor-fonte-home);
+    font: 700 4rem/1.6 "Yrsa", sans-serif;
+}
+
+.content-home h3 {
+    color: var(--cor-fonte-home2);
+    font: 400 2rem/1.1 "Yrsa", sans-serif;
+}
+
+.content-planta img {
+    height: 70vh;
+    width: auto;
+}
+
+.content-planta h2 {
+    font: 500 3rem/1.1 "Yrsa", sans-serif;
+    text-transform: uppercase;
+    color: var(--cor-fonte-home);
+}
+
+.content-analise {
+    color: var(--cor-fonte-home);
+}
+
+.content-analise h2 {
+    font: 500 3rem/1.1 "Yrsa", sans-serif;
+    text-transform: uppercase;
+}
+
+/* FOOTER */
+.footer-icon {
+    width: 50px;
+    height: auto;
+    margin-bottom: 10px;
+}
+
+.footer p {
+    margin: 0;
+}
+
+.dark {
+    background-color: #000;
+}
+
+/* BODY */
+body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.menu-bg {
+    background-color: var(--cor-footer);
+}
+
+.menu-bg a {
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
+
+.menu-bg a:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+/* LOGIN */
+
+.login-box {
+    backdrop-filter: blur(16px);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    padding: 40px;
+}
+
+.login-text input {
+    outline: none;
+}
+
+.login-text input:focus {
+    border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.login-text input::placeholder {
+    color: #ccc;
+}
+
+.login-text button {
+    background-color: #FF6500;
+    font-size: 18px;
+    padding-left: 0;
+    margin-left: 0;
+}
+
+@media (max-width: 768px) {
+    .content-home h1 {
+        font-size: 3rem;
+    }
+
+    .content-home h3 {
+        font-size: 1.5rem;
+    }
+
+    .content-planta img {
+        height: 50vh;
+    }
+    
+    .footer-icon {
+        width: 30px;
+    }
+}
