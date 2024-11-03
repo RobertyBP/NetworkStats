@@ -20,17 +20,17 @@ class Login extends BaseController {
         if (!$this->request->is('post'))
             return view('login', ['no_banner' => true]);
 
-        $username = strval($this->request->getPost('username'));
+        $email = strval($this->request->getPost('email'));
         $senha = strval($this->request->getPost('senha'));
 
-        $username = substr($username, 0, 125);
+        $email = substr($email, 0, 125);
         $senha = substr($senha, 0, 256);       
 
         $data = array();
-        $data['username'] = $username;
+        $data['email'] = $email;
 
         // Campos de login incompletos
-        if (trim($username) == '' || trim($senha) == '') {
+        if (trim($email) == '' || trim($senha) == '') {
 
             $data['msg'] = 'Usuário e/ou senha ausente(s)';
             return view('login', $data + ['no_banner' => true]);
@@ -38,7 +38,7 @@ class Login extends BaseController {
         }
 
         $userModel = new UserModel();
-        $usuario = $userModel->buscaUsuario($username);
+        $usuario = $userModel->findUserByEmail($email);
         // Realiza login se existir usuário cadastrado e se a senha for compatível
         if (!empty($usuario)) {
             $name_tokens = strpos($usuario[0]['NOME'], ' ') ? explode(' ', $usuario[0]['NOME']) : null;
@@ -50,12 +50,12 @@ class Login extends BaseController {
 
             $nome_tokens = explode(' ', $usuario[0]['NOME']);
             $newdata = [
-                'username'      => $usuario[0]['USERNAME'],
+                'email'         => $usuario[0]['EMAIL'],
                 'uuid'          => $usuario[0]['UUID'],
-                'id_usuario'    => $usuario[0]['COD_USER'],
+                'id'            => $usuario[0]['COD_USER'],
                 'nome'          => $usuario[0]['NOME'],
                 'nome_reduzido' => !empty($name_tokens) ? $nome_tokens[0] . ' ' . $nome_tokens[count($nome_tokens)-1] : $usuario[0]['NOME'],
-                'is_admin'     => $usuario[0]['PERMISSAO'] === '1' ? true : false,
+                'is_admin'      => $usuario[0]['PERMISSAO'] === '1' ? true : false,
                 'logged_in'     => true,
             ];
 

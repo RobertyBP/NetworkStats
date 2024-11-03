@@ -20,9 +20,9 @@ class CreateUserTable extends Migration
                 'null' => false,
                 'unique' => true,
             ],
-            'USERNAME' => [
+            'EMAIL' => [
                 'type' => 'VARCHAR',
-                'constraint' => 125,
+                'constraint' => 150,
                 'null' => false,
                 'unique' => true,
             ],
@@ -42,6 +42,12 @@ class CreateUserTable extends Migration
                 'unsigned' => true,
                 'null' => false,
             ],
+            'ATIVO' => [
+                'type' => 'INT',
+                'constraint' => 1,
+                'unsigned' => true,
+                'null' => false,
+            ]
         ]);
 
         $this->forge->addPrimaryKey('COD_USER');

@@ -26,7 +26,7 @@
                 <h2 class="text-center mb-4 text-white">Acesse sua Conta</h2>
                 <form class="login-text" action="<?= base_url('login') ?>" method="POST">
                     <div class="mb-3 text-white">
-                        <input class="form-control bg-transparent text-white border-light" type="text" name="username" id="username" placeholder="Usuário" required maxlength="125">
+                        <input class="form-control bg-transparent text-white border-light" type="email" name="email" id="email" placeholder="E-mail" required maxlength="125">
                     </div>
                     <div class="mb-3 text-white">
                         <input class="form-control bg-transparent text-white border-light" type="password" name="senha" id="senha" placeholder="Senha" required maxlength="256">

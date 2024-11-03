@@ -1,9 +1,3 @@
-<?php
-/**
- * @var CodeIgniter\View\View $this
-*/
-?>
-
 <!-- Header -->
 <!DOCTYPE html>
 <html lang="pt-br">
@@ -19,63 +13,62 @@
 </head>
 
 <!-- Content -->
-<body class="d-flex flex-column min-vh-100">
+<body class="d-flex flex-column min-vh-100" style="background-color: var(--cor-home);">
 <main class="flex-grow-1">
 
-<?php if(!isset($no_banner) || $no_banner == false) : ?>
-<nav class="navbar navbar-expand-lg fixed-top py-3" style="background-color: var(--cor-planta);" aria-label="primaria">
-    <div class="container d-flex justify-content-between align-items-center">
-        
-        <a href="<?= base_url('home') ?>">
-            <img src="<?= base_url('assets/img/wifi.svg') ?>" alt="Logo" width="32" height="32" />
-        </a>
-
-        <?php if (!isset($no_menu) || $no_menu == false): ?>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-        <?php endif ?>
-
-        <div class="collapse navbar-collapse <?= isset($no_menu) && $no_menu == true ? 'flex-grow-0' : '' ?>" id="navbarContent">
-            <?php if (!isset($no_menu) || $no_menu == false): ?>
-            <ul class="nav mb-0">
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('home#introducao') ?>">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('home#planta') ?>">Planta</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('home#analise') ?>">Análise de rede</a></li>
-                <li class="nav-item"><a class="nav-link" href="<?= base_url('sobre') ?>">Sobre</a></li>
-            </ul>
-            <?php endif ?>
-        </div>
-
-        <div class="d-flex align-items-center mx-3 navbarContentClass">
-            <span class="navbar-text text-white pe-3">
-                <div class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-white" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                        <?= session('is_admin') === true ? '<span class="material-symbols-rounded align-bottom text-white">shield_person</span> ' : '' ?>
-                        <b class="text-white"><?= session('nome_reduzido') ?></b>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDarkDropdownMenuLink">
-                        <?php if(session('is_admin') === true) : ?>
-                            <li><span class="dropdown-header">Administração</span></li>
-                            <li><a href="<?= base_url('users/list') ?>" class="dropdown-item"><span class="material-symbols-rounded align-bottom">settings_account_box</span> Gestão de Usuários</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                        <?php endif ?>
-                        <li><span class="dropdown-header">Conta</span></li>
-                        <li><a href="<?= base_url('user/account/') . session('uuid') ?>" class="dropdown-item"><span class="material-symbols-rounded align-bottom">passkey</span> Alterar minha senha</a></li>
-                    </ul>
-                </div>
-            </span>
-            <a href="<?= base_url('logout') ?>" class="nav-link">
-                Sair <span class="material-symbols-rounded align-bottom">logout</span>
+    <?php if(!isset($no_banner) || $no_banner == false) : ?>
+    <nav class="navbar navbar-expand-lg fixed-top py-3" style="background-color: var(--cor-planta);" aria-label="primaria">
+        <div class="container d-flex justify-content-between align-items-center">
+            
+            <a href="<?= base_url('home') ?>">
+                <img src="<?= base_url('assets/img/wifi.svg') ?>" alt="Logo" width="32" height="32" />
             </a>
+
+            <?php if (!isset($no_menu) || $no_menu == false): ?>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent" aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            <?php endif ?>
+
+            <div class="collapse navbar-collapse <?= isset($no_menu) && $no_menu == true ? 'flex-grow-0' : '' ?>" id="navbarContent">
+                <?php if (!isset($no_menu) || $no_menu == false): ?>
+                <ul class="nav mb-0">
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url('home#introducao') ?>">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url('home#planta') ?>">Planta</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url('home#analise') ?>">Análise de rede</a></li>
+                    <li class="nav-item"><a class="nav-link" href="<?= base_url('sobre') ?>">Sobre</a></li>
+                </ul>
+                <?php endif ?>
+            </div>
+
+            <div class="d-flex align-items-center mx-3 navbarContentClass">
+                <span class="navbar-text text-white pe-3">
+                    <div class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle text-white" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            <?= session('is_admin') === true ? '<span class="material-symbols-rounded align-bottom text-white">shield_person</span> ' : '' ?>
+                            <b class="text-white"><?= session('nome_reduzido') ?></b>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="navbarDarkDropdownMenuLink">
+                            <?php if(session('is_admin') === true) : ?>
+                                <li><span class="dropdown-header">Administração</span></li>
+                                <li><a href="<?= base_url('users/list') ?>" class="dropdown-item"><span class="material-symbols-rounded align-bottom">settings_account_box</span> Gestão de Usuários</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                            <?php endif ?>
+                            <li><span class="dropdown-header">Conta</span></li>
+                            <li><a href="<?= base_url('user/account/') . session('uuid') ?>" class="dropdown-item"><span class="material-symbols-rounded align-bottom">passkey</span> Alterar minha senha</a></li>
+                        </ul>
+                    </div>
+                </span>
+                <a href="<?= base_url('logout') ?>" class="nav-link">
+                    Sair <span class="material-symbols-rounded align-bottom">logout</span>
+                </a>
+            </div>
+
         </div>
+    </nav>
+    <?php endif ?>
 
-    </div>
-</nav>
-<?php endif ?>
-
-
-<?= $this->renderSection('content') ?>
+    <?= $this->renderSection('content') ?>
 
     <!-- Alertas -->
     <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100;">
@@ -94,11 +87,13 @@
 
 <!-- Footer -->
 <footer class="footer mt-auto" style="background-color: #000;">
-    <div class="container">
-        <img src="<?= base_url('assets/img/wifi.svg') ?>" class="footer-icon mx-auto d-block" style="width: 30px; height: auto; margin-bottom: 10px;">
-        <div class="text-center text-white small mt-0">
-            <p class="m-0">&copy Todos os direitos reservados.</p> 
-            <p class="pb-1 m-0"></p><?= date('Y') ?> - Desenvolvimento de Projeto 1</p> 
+    <div class="container d-flex justify-content-center align-items-center text-white small py-3">
+        <a href="<?= base_url('home') ?>">
+            <img src="<?= base_url('assets/img/wifi.svg') ?>" class="footer-icon" style="width: 30px; height: auto; margin-right: 10px;" alt="Logo">
+        </a>
+        <div class="text-center">
+            <p class="m-0">&copy; Todos os direitos reservados.</p>
+            <p class="m-0"><?= date('Y') ?> - Desenvolvimento de Projeto 1</p>
         </div>
     </div>
 </footer>
@@ -110,14 +105,14 @@
 <script src="<?= base_url('assets/bootstrap-5.3.3-dist/js/bootstrap.bundle.min.js') ?>"></script>
 <script src="<?= base_url('assets/JQuery-3.7.0/jquery-3.7.0.min.js') ?>"></script>
 <script>
-
+    
     function mostrarMensagem(tipo, mensagem) {
         var tituloAlerta = tipo === 'success' ? 'Sucesso' : 'Erro';
         var bgColor = tipo === 'success' ? '#d4edda' : '#f8d7da';
         var textColor = tipo === 'success' ? '#155724' : '#842029';
 
         $('#tituloAlerta').text(tituloAlerta);
-        $('#alertaMensagem').html(mensagem);
+        $('#alertaMensagem').html(mensagem); 
         $('#alerta').css({
             '--toast-bg-color': bgColor,
             '--toast-text-color': textColor,
@@ -128,17 +123,17 @@
         }).toast({ delay: 5000, html: true }).toast('show');
     }
 
-    // Inicialização do Toast:
-    $(document).ready(function () {
+    // Inicialização do Toast
+    $(document).ready(function(){
         $('.toast').toast({ animation: true, autohide: true, delay: 5000 });
     });
 
     // Bootstrap Tooltips:
     $(document).ready(function () {
-        const tooltips = document.querySelector('.tt')
+        const tooltips = document.querySelectorAll('.tt'); // Seleciona todos os elementos com a classe .tt
         tooltips.forEach(t => {
-            new bootstrap.Tooltip(t)
-        })
+            new bootstrap.Tooltip(t); // Inicializa o tooltip para cada elemento
+        });
     });
 
 </script>

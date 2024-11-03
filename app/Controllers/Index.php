@@ -13,12 +13,12 @@ class Index extends BaseController
         $this->session = session();
     }
 
-    public function index() {
-
+    public function index($section = null) {
         if ($this->session->logged_in)
             return view('home');
         else
             return redirect()->to(base_url('login'));
-        
     }
+
+    
 }

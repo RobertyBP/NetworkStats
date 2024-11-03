@@ -13,7 +13,7 @@ class UserModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['UUID', 'USERNAME', 'NOME', 'SENHA', 'PERMISSAO'];
+    protected $allowedFields    = ['UUID', 'EMAIL', 'NOME', 'SENHA', 'PERMISSAO', 'ATIVO'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -96,18 +96,33 @@ class UserModel extends Model
     }
 
 
-    public function buscaUsuario($username) {
+    public function findUserByEmail($email) {
 
         $sql_query = "SELECT USER.COD_USER,
                              USER.UUID,
-                             USER.USERNAME,
+                             USER.EMAIL,
                              USER.NOME,
                              USER.SENHA,
                              USER.PERMISSAO
                       FROM USER
-                      WHERE USERNAME = :username:";
+                      WHERE EMAIL = :email:";
 
-        return $this->query($sql_query, ['username' => $username])->getResultArray();
+        return $this->query($sql_query, ['email' => $email])->getResultArray();
+
+    }
+
+    public function findUserByID($id) {
+
+        $sql_query = "SELECT USER.COD_USER,
+                             USER.UUID,
+                             USER.EMAIL,
+                             USER.NOME,
+                             USER.SENHA,
+                             USER.PERMISSAO
+                      FROM USER
+                      WHERE COD_USER = :id:";
+
+        return $this->query($sql_query, ['id' => $id])->getResultArray();
 
     }
 
@@ -123,6 +138,83 @@ class UserModel extends Model
     }
 
 
-    
+    public function complexGetUsers($vars, $cols) { // Tratamento dos dados vindos do DataTables para a tabela de usuários
+
+        $sql_select = "SELECT USER.COD_USER,
+                              USER.UUID,
+                              USER.EMAIL,
+                              USER.NOME,
+                              USER.SENHA,
+                              USER.PERMISSAO,
+                              USER.ATIVO";
+                        
+        $sql_from = "\nFROM USER";
+
+        // Verifica se existem filtros presentes referentes ao nome ou e-mail do usuário:
+        $found_where = false;
+        $where_params = array();
+        if(!empty($vars['nome'])) {
+            $where_params[] = "USER.NOME LIKE :nome:";
+            $vars['nome'] = "%" . $vars['nome'] . "%";
+            $found_where = true;
+        }
+        if(!empty($vars['email'])) {
+            $where_params[] = "USER.EMAIL LIKE :email:";
+            $vars['email'] = "%" . $vars['email'] . "%";
+            $found_where = true;
+        }
+        
+        $sql_where = "";
+        if ($found_where)
+            $sql_where = "\nWHERE " . implode(' AND ', $where_params);
+
+        // Verifica se existe alguma ordenação especificada na tabela e constrói a cláusula ORDER BY:
+        $order = $vars['order'];
+        unset($vars['order']);
+        $sql_orderBy = "";
+        if(!empty($order)) {
+            $sort_col = $order[0]['column'];
+            $sort_dir = strtoupper($order[0]['dir']);
+            $sort_dir = in_array($sort_dir, ['ASC', 'DESC']) ? $sort_dir : '';
+            $sql_orderBy = "\nORDER BY " . $cols[$sort_col] . " " . $sort_dir . " ";
+        }
+
+        // Ajustes de limit e offset para a paginação:
+        $limit = (int)$vars['length'];
+        $offset = (int)$vars['start'];
+        $sql_page = "\nLIMIT {$limit} OFFSET {$offset}";
+
+        $sql_count = "SELECT COUNT(*) AS TOTAL " . $sql_from . $sql_where; // Máximo de linhas sem a paginação
+        $sql_data = $sql_select . $sql_from . $sql_where . $sql_orderBy . $sql_page; // Tuplas retornadas
+
+        // Execução das queries:
+        $query_count = $this->query($sql_count, $vars)->getRowArray()['TOTAL'];
+        $results = $this->query($sql_data, $vars)-> getResultArray();
+
+        return [
+            $results,
+            $query_count
+        ];
+ 
+    }
+
+
+    public function inserirUsuario($data) {
+        # Se a inserção for bem-sucedida
+        if($this->insert($data))
+            return true;
+
+        # Caso contrário, retorna false.
+        return false;
+    }
+
+    public function editarUsuario($id, $data) {
+        # Se o update for bem-sucedido
+        if($this->update($id, $data))
+            return true;
+
+        # Caso contrário, retorna false.
+        return false;
+    }
 
 }

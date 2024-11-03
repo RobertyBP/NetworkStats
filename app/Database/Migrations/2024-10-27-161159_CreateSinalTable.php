@@ -45,7 +45,7 @@ class CreateSinalTable extends Migration
                 'unsigned' => true,
                 'null' => false,
             ],
-            'DT_ANALISE' => [ // Data da medição - Auto_Generated
+            'DT_ANALISE' => [ // Data da medição - Auto Generated
                 'type' => 'TIMESTAMP',
                 'null' => false,
                 'default' => new RawSql('CURRENT_TIMESTAMP'),

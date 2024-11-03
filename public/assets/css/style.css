@@ -8,6 +8,8 @@
     --cor-fonte-home2: #FF6500;
 }
 
+/* Bootstrap default overlay */
+
 body {
     height: 100vh;
     box-sizing: border-box;
@@ -31,10 +33,6 @@ a {
 
 #navbarContent .nav-link:hover, .navbarContentClass a:hover {
     color: #FF6500; 
-}
-
-.btn {
-    margin-left: 10px;
 }
 
 
@@ -139,6 +137,11 @@ body {
     padding-left: 0;
     margin-left: 0;
 }
+
+table tbody {
+    background-color: #fff;
+}
+
 
 @media (max-width: 768px) {
     .content-home h1 {
