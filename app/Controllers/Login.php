@@ -43,10 +43,10 @@ class Login extends BaseController {
         if (!empty($usuario)) {
             $name_tokens = strpos($usuario[0]['NOME'], ' ') ? explode(' ', $usuario[0]['NOME']) : null;
 
-            // if(!password_verify($senha, $usuario[0]['SENHA'])) {
-            //     $data['msg'] = 'Usuário e/ou senha inválidos';
-            //     return view('login', $data + ['no_banner' => true]);
-            // }
+            if(!password_verify($senha, $usuario[0]['SENHA'])) {
+                $data['msg'] = 'Usuário e/ou senha inválidos';
+                return view('login', $data + ['no_banner' => true]);
+            }
 
             $nome_tokens = explode(' ', $usuario[0]['NOME']);
             $newdata = [

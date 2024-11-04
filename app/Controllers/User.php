@@ -5,6 +5,7 @@ namespace App\Controllers;
 use App\Controllers\BaseController;
 use App\Models\UserModel;
 use CodeIgniter\HTTP\ResponseInterface;
+use Exception;
 
 class User extends BaseController
 {
@@ -15,6 +16,33 @@ class User extends BaseController
         'NOME' => 'required|max_length[255]',
         'EMAIL' => 'valid_email|min_length[8]|max_length[150]',
         'PERMISSAO' => 'required|in_list[0, 1]',
+    ];
+
+    # Regras de validação de senha
+    protected $passwordRules = [
+        'SENHA_ATUAL' => [
+            'rules' => 'required|min_length[8]|max_length[256]',
+            'errors' => [
+                'required' => 'A senha atual é obrigatória.',
+                'max_length' => 'A senha atual é muito longa.',
+            ]
+        ],
+        'NOVA_SENHA' => [
+            'rules' => 'required|min_length[8]|max_length[256]|differs[SENHA_ATUAL]',
+            'errors' => [
+                'required' => 'Por favor, insira sua nova senha.',
+                'min_length' => 'Sua nova senha é muito curta.',
+                'max_length' => 'Sua nova senha é muito longa.',
+                'differs' => 'Sua nova senha não pode ser igual a atual.',
+            ]
+        ],
+        'CONFIRMA_SENHA' => [
+            'rules' => 'required|matches[NOVA_SENHA]',
+            'errors' => [
+                'required' => 'A confirmação da sua nova senha é obrigatória.',
+                'matches' => 'A sua nova senha e a confirmação da mesma devem ser idênticas.',
+            ]
+        ]
     ];
 
     public function index()
@@ -143,12 +171,11 @@ class User extends BaseController
         } # End switch Case;
     }
 
-
+    # Delete user
     public function userDelete($id) {
         if(!$this->request->is('POST'))
             return redirect()->to(base_url('home'));
 
-        log_message("info", "ID: " . $id);
         $userModel = new UserModel();
 
         // Verifica se o usuário existe
@@ -161,6 +188,83 @@ class User extends BaseController
             return $this->response->setJSON(['status' => 'error', 'message' => 'Um erro inesperado ocorreu ao excluir o usuário. Por favor, tente novamente em alguns instantes.']);
 
         return $this->response->setJSON(['status' => 'success']);
+    }
+
+    # Alteração de senha:
+    public function alterarSenha($uuid) {
+
+        # Se for get:
+        if(!$this->request->is('POST')) {
+            # Verifica se o UUID do usuário corresponde a sessão atual.
+            if(!empty(session('uuid')) && session('uuid') == $uuid) {
+                return view('passwordChange');
+            } else {
+                return redirect()->to(base_url('home'));
+            }
+        }
+            
+        # Se for post, verifica as regras de validação
+        $fields = $this->request->getJSON(true); # Recupera os campos do formulário como array associativo
+    
+        $data = [
+            'SENHA_ATUAL' => uniformiza_espacos($fields['senhaAtual']),
+            'NOVA_SENHA' => uniformiza_espacos($fields['novaSenha']),
+            'CONFIRMA_SENHA' => uniformiza_espacos($fields['confirmaSenha']),
+        ];
+
+        # Validação do CodeIgniter
+        $errors = array();
+        $validation = \Config\Services::validation();
+        $validation->reset();
+        $validation->setRules($this->passwordRules);
+        $validated = $validation->run($data);
+        if (!$validated)
+            $errors = $validation->getErrors();
+    
+        if(!empty($errors)) {
+            // Return errors
+            $errorMsg = "<ul>";
+    
+            foreach($errors as $key => $value) 
+                $errorMsg .= "<li>" . $value . "</li>";
+    
+            $errorMsg .= "</ul>";
+    
+            return $this->response->setJSON(['status' => 'error', 'message' => $errorMsg]);
+        }
+
+        $userModel = new UserModel();
+
+        
+
+        # Verifica se o usuário existe
+        $user = $userModel->findUserByUUID($uuid);
+        # Caso não seja encontrado no banco, destrói a sessão ativa
+        if(empty($user))
+            return redirect()->to(base_url('logout'));
+
+        # Verifica se a senha atual é compatível
+        $senhaValida = $userModel->verificaSenha($data['SENHA_ATUAL']);
+
+        if(!$senhaValida) {
+            return $this->response->setJSON(['status' => 'error', 'message' => 'A senha atual está incorreta.']);
+        }
+        
+        # Reforça a coerência da sessão com o UUID recebido
+        if(!empty(session('uuid')) && session('uuid') == $uuid) {
+
+            $userID = session('id');
+
+            $res = $userModel->changePassword($userID, $data['NOVA_SENHA']);
+            if(!$res)
+                return $this->response->setJSON(['status' => 'error', 'message' => 'Um erro inesperado ocorreu ao alterar a senha. Por favor, tente novamente em alguns instantes.']);
+
+            return $this->response->setJSON(['status' => 'success']);
+            
+        } 
+        else {
+            return redirect()->to(base_url('home'));
+        }
     }
 
 }

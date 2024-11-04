@@ -72,7 +72,7 @@
                                 <li><hr class="dropdown-divider"></li>
                             <?php endif ?>
                             <li><span class="dropdown-header">Conta</span></li>
-                            <li><a href="<?= base_url('user/account/') . session('uuid') ?>" class="dropdown-item"><span class="material-symbols-rounded align-bottom">passkey</span> Alterar minha senha</a></li>
+                            <li><a href="<?= base_url('user/account/') . session('uuid') ?>/changePassword" class="dropdown-item"><span class="material-symbols-rounded align-bottom">passkey</span> Alterar minha senha</a></li>
                         </ul>
                     </div>
                 </span>

@@ -53,12 +53,12 @@
                     </div>
                 </div>
                 <div class="col-auto px-1">
-                    <button class="btn btn-danger shadow-sm py-1 px-2" id="filter">
+                    <button class="btn btn-primary shadow-sm py-1 px-2" id="filter">
                         <span class="material-symbols-rounded align-middle">filter_alt</span> Search
                     </button>
                 </div>
                 <div class="col-auto px-0">
-                    <a class="btn btn-outline-danger shadow-sm py-1 px-2 tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Limpar Filtros" id="limpar">
+                    <a class="btn btn-outline-primary shadow-sm py-1 px-2 tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Limpar Filtros" id="limpar">
                         <span class="material-symbols-rounded align-middle">filter_alt_off</span>
                     </a>
                 </div>

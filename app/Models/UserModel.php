@@ -123,11 +123,24 @@ class UserModel extends Model
 
     }
 
+    public function findUserByUUID($uuid) {
+
+        $sql_query = "SELECT USER.NOME,
+                             USER.EMAIL,
+                             USER.PERMISSAO
+                      FROM USER
+                      WHERE UUID = :uuid:";
+
+        return $this->query($sql_query, ['uuid' => $uuid])->getResultArray()[0];
+
+    }
+
     public function verificaSenha($password) {
 
         $sql_query = "SELECT USER.SENHA
                       FROM USER
                       WHERE USER.UUID = :uuid:";
+
         $currPassword = $this->query($sql_query, ['uuid' => session()->get('uuid')])->getResultArray()[0]['SENHA'];
 
         return password_verify($password, $currPassword);
@@ -220,6 +233,17 @@ class UserModel extends Model
             return true;
 
         # Caso contrário, retorna false.
+        return false;
+    }
+
+    public function changePassword($id, $senha) {
+        $sql_query = "UPDATE USER
+                      SET SENHA = :senha:
+                      WHERE USER.COD_USER = :id:";
+
+        if($this->query($sql_query, ['senha' => password_hash($senha, PASSWORD_DEFAULT), 'id' => $id]))
+            return true;
+
         return false;
     }
 
