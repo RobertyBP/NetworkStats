@@ -7,6 +7,23 @@
     <link rel="stylesheet" href="<?= base_url('assets/css/style.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/bootstrap-5.3.3-dist/css/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?= base_url('assets/material-symbols/material-symbols-rounded.css') ?>">
+
+    <style>
+        /* Toast Style Setup */
+        .toast-custom {
+            background-color: var(--toast-bg-color, #f8d7da); /* Background padrão */
+            color: var(--toast-text-color, #842029); /* Texto padrão */
+        }
+        .toast-custom .toast-header {
+            background-color: var(--toast-header-bg-color, #f8d7da); /* Background do header */
+            color: var(--toast-header-text-color, #842029); /* Texto do header */
+        }
+        .toast-custom .toast-body {
+            background-color: var(--toast-body-bg-color, #f8d7da); /* Background do corpo */
+            color: var(--toast-body-text-color, #842029); /* Texto do corpo */
+        }
+
+    </style>
     <?= $this->renderSection('more-styles') ?>
 
     <title>Projeto WIFI</title>

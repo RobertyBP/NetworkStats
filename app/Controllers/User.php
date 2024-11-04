@@ -14,7 +14,6 @@ class User extends BaseController
     protected $rules = [
         'NOME' => 'required|max_length[255]',
         'EMAIL' => 'valid_email|min_length[8]|max_length[150]',
-        'ATIVO' => 'required|in_list[0, 1]',
         'PERMISSAO' => 'required|in_list[0, 1]',
     ];
 
@@ -42,7 +41,7 @@ class User extends BaseController
         $vars['email'] = mb_strtolower(uniformiza_string($this->request->getPost('filtroEmail')));
 
         # Definição da ordem lógica dos índices presentes no DataTables:
-        $cols = ['COD_USER', 'UUID', 'NOME', 'EMAIL', 'PERMISSAO', 'ATIVO', 'ACOES'];
+        $cols = ['COD_USER', 'UUID', 'NOME', 'EMAIL', 'PERMISSAO', 'ACOES'];
 
         # Inicialização da variável array4json como array vazio:
         $array4json = array(); // Abriga os dados retornados pela query
@@ -66,9 +65,10 @@ class User extends BaseController
         $newData = [
             'NOME'      => uniformiza_string($data['nome']),
             'EMAIL'     => mb_strtolower(uniformiza_string($data['email'])),
-            'ATIVO'     => normaliza_status($data['ativo']),
             'PERMISSAO' => normaliza_status($data['permissao']),
         ];
+
+        // log_message("info", json_encode($newData, JSON_PRETTY_PRINT));
 
         # CodeIgniter Validation
         $errors = [];
@@ -98,8 +98,8 @@ class User extends BaseController
             case 'add' :
 
                 # Verifica se o e-mail recebido do formulário já existe no banco:
-                $validEmail = $userModel->checkUserByEmail($newData['EMAIL']);
-                if(!$validEmail)
+                $validEmail = $userModel->findUserByEmail($newData['EMAIL']);
+                if(!empty($validEmail[0]))
                     return $this->response->setJSON(['status' => 'error', 'message' => 'O E-mail informado já possui cadastro.']);
 
                 $tempPassword = $userModel->passwordGenerator();
@@ -142,4 +142,25 @@ class User extends BaseController
 
         } # End switch Case;
     }
+
+
+    public function userDelete($id) {
+        if(!$this->request->is('POST'))
+            return redirect()->to(base_url('home'));
+
+        log_message("info", "ID: " . $id);
+        $userModel = new UserModel();
+
+        // Verifica se o usuário existe
+        $user = $userModel->findUserByID($id);
+        if(empty($user))
+            return $this->response->setJSON(['status' => 'error', 'message' => 'O usuário especificado não existe.']);
+        
+        $res = $userModel->deletarUsuario($id);
+        if(!$res)
+            return $this->response->setJSON(['status' => 'error', 'message' => 'Um erro inesperado ocorreu ao excluir o usuário. Por favor, tente novamente em alguns instantes.']);
+
+        return $this->response->setJSON(['status' => 'success']);
+    }
+
 }

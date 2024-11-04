@@ -42,12 +42,6 @@ class CreateUserTable extends Migration
                 'unsigned' => true,
                 'null' => false,
             ],
-            'ATIVO' => [
-                'type' => 'INT',
-                'constraint' => 1,
-                'unsigned' => true,
-                'null' => false,
-            ]
         ]);
 
         $this->forge->addPrimaryKey('COD_USER');

@@ -19,6 +19,9 @@ $routes->get('/sobre', 'Sobre::index');
 #User
 $routes->match(['GET', 'POST'], '/users/list', 'User::index');
 $routes->match(['GET', 'POST'], '/users/list/json', 'User::json_list');
+$routes->match(['GET', 'POST'], '/users/(add)', 'User::upsert/$1');
+$routes->match(['GET', 'POST'], '/users/(edit)/(:num)', 'User::upsert/$1/$2');
+$routes->match(['GET', 'POST'], '/users/delete/(:num)', 'User::userDelete/$1');
 
 #Redirect
 $routes->addRedirect('(.+)', '/');

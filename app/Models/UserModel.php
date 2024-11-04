@@ -13,7 +13,7 @@ class UserModel extends Model
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['UUID', 'EMAIL', 'NOME', 'SENHA', 'PERMISSAO', 'ATIVO'];
+    protected $allowedFields    = ['UUID', 'EMAIL', 'NOME', 'SENHA', 'PERMISSAO'];
 
     protected bool $allowEmptyInserts = false;
     protected bool $updateOnlyChanged = true;
@@ -113,16 +113,13 @@ class UserModel extends Model
 
     public function findUserByID($id) {
 
-        $sql_query = "SELECT USER.COD_USER,
-                             USER.UUID,
+        $sql_query = "SELECT USER.NOME,
                              USER.EMAIL,
-                             USER.NOME,
-                             USER.SENHA,
                              USER.PERMISSAO
                       FROM USER
                       WHERE COD_USER = :id:";
 
-        return $this->query($sql_query, ['id' => $id])->getResultArray();
+        return $this->query($sql_query, ['id' => $id])->getResultArray()[0];
 
     }
 
@@ -145,8 +142,7 @@ class UserModel extends Model
                               USER.EMAIL,
                               USER.NOME,
                               USER.SENHA,
-                              USER.PERMISSAO,
-                              USER.ATIVO";
+                              USER.PERMISSAO";
                         
         $sql_from = "\nFROM USER";
 
@@ -211,6 +207,16 @@ class UserModel extends Model
     public function editarUsuario($id, $data) {
         # Se o update for bem-sucedido
         if($this->update($id, $data))
+            return true;
+
+        # Caso contrário, retorna false.
+        return false;
+    }
+
+    public function deletarUsuario($id) {
+        
+        # Se o delete for bem-sucedido
+        if($this->where('COD_USER', $id)->delete())
             return true;
 
         # Caso contrário, retorna false.

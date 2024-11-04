@@ -67,15 +67,6 @@
                                 </div>
                             </div>
                             <div class="row justify-content-center pb-3 align-items-center">
-                                <div class="col-2 px-1 pb-2">
-                                    <div class="input-group shadow-sm">
-                                        <label for="status" class="input-group-text">Status</label>
-                                        <select class="form-select" id="status" name="status">
-                                            <option selected value="1">Ativo</option>
-                                            <option value="0">Inativo</option>
-                                        </select>
-                                    </div>
-                                </div>
                                 <div class="col-3 px-1 pb-2">
                                     <div class="input-group shadow-sm">
                                         <label for="permissao" class="input-group-text">Permissão</label>
@@ -96,6 +87,27 @@
             </div>
         </div>
 
+        <!-- Modal de Confirmação de Exclusão -->
+        <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar Exclusão</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Tem certeza de que deseja excluir este usuário?</p>
+                        <p>Todos os dados relacionados a este usuário serão <strong>permanentemente</strong> excluídos.</p>
+                        <p>Essa ação não poderá ser desfeita.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="button" class="btn btn-danger" id="confirmDelete">Excluir</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="row justify-content-start small">
             <div class="col-12 mb-5 p-3 table-responsive text-white">
                 <table id="listar_usuarios" class="table table-hover table-striped table-sm align-middle">
@@ -106,7 +118,6 @@
                             <th scope="col" class="col text-white">Nome</th>
                             <th scope="col" class="col text-white">E-mail</th>
                             <th scope="col" class="col text-white">Permissão</th>
-                            <th scope="col" class="col text-white">Ativo</th>
                             <th scope="col" class="col-1 text-white">Ações</th>
                         </tr>
                     </thead>
@@ -180,25 +191,16 @@
                     }
                 }
             },
-            { 
-                data: 'ATIVO', 
-                className: 'dt-body-center dt-head-center',
-                render: function (data, type, row) {
-                    if(row['ATIVO'] == '1') {
-                        return '<span class="material-symbols-rounded align-bottom text-primary btn tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Ativo">person</span>';
-                    } else if (row['ATIVO'] == '0') {
-                        return '<span class="material-symbols-rounded align-bottom text-secondary text-opacity-25 btn tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Inativo">person_off</span>'
-                    }
-                }
-            },
             {
                 data: 'ACOES', 
                 searchable: false, 
                 orderable: false, 
                 className: 'dt-body-center dt-head-center',
                 render: function (data, type, row) {
-                    return '<a class="btn btn-sm btn-outline-primary p-0 editar-usuario" data-id="' + row['UUID'] + '">' +
-                                '<span class="material-symbols-rounded align-middle tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar">edit</span></a>';
+                    return '<a class="btn btn-sm btn-outline-primary p-0 mx-1 editar-usuario" data-id="' + row['COD_USER'] + '">' +
+                                '<span class="material-symbols-rounded align-middle tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar">edit</span></a>' +
+                            '<a class="btn btn-sm btn-outline-danger p-0 mx-1 deletar-usuario" data-id="' + row['COD_USER'] + '">' +
+                                '<span class="material-symbols-rounded align-middle tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Deletar">delete</span></a>';
                 },
             },
         ],
@@ -215,7 +217,7 @@
             table.ajax.reload();
         });
 
-        // Filter form cleaner
+        // Limpar os filtros do datatables
         $('#limpar').on('click', function(){
             $('#busca_usuario')[0].reset();
             table.ajax.reload(); // Table reload
@@ -225,7 +227,7 @@
             $('#userModal').modal('hide');
         });
 
-        // Opens the edit modal
+        // Abre o modal de Edição
         $('#listar_usuarios').on('click', '.editar-usuario', function(e) {
             e.preventDefault();
             $('#user_form')[0].reset();
@@ -234,14 +236,53 @@
 
             $('#nome').val(rowData['NOME']);
             $('#email').val(rowData['EMAIL']);
-            $('#status').val(rowData['ATIVO']);
             $('#permissao').val(rowData['PERMISSAO']);
             $('#userModal').data('id', rowData['COD_USER']);
             $('#userModal').modal('show');
         });
 
+        // Abre o modal de confirmação de exclusão do usuário
+        $('#listar_usuarios').on('click', '.deletar-usuario', function(e) {
+
+            e.preventDefault();
+            var rowData = table.row($(this).parents('tr')).data();
+
+            $('#confirmDeleteModal').data('id', rowData['COD_USER']);
+            $('#confirmDeleteModal').modal('show');
+        });
+
+        // Após confirmar a exclusão:
+        $('#confirmDelete').on('click', function() {
+            $('#confirmDelete').addClass('disabled');
+
+            var userID = $('#confirmDeleteModal').data('id');
+            var deleteURL = "<?= base_url('users/delete/') ?>" + userID;
+            $.ajax({
+                url: deleteURL, 
+                type: "POST",
+                success: function (response) {
+                    if (response.status === 'error') {
+                        mostrarMensagem('danger', response.message);
+                    } else {
+                        mostrarMensagem('success', 'O usuário foi excluído com sucesso!');
+                    }
+                },
+                error: function (response) {
+                    mostrarMensagem('danger', response.message);
+                },
+                complete: function () {
+                    // Fecha o modal
+                    table.ajax.reload();
+                    $('#confirmDelete').removeClass('disabled');
+                    $('#confirmDeleteModal').modal('hide');
+                }
+            });
+
+            
+        });
+
         $(document).ready(function () {
-            // Form fields validation
+            // Validação dos campos do formulário
             validator = $('#user_form').validate({
                 onfocusout: false,
                 onkeyup: false,
@@ -256,10 +297,6 @@
                         email: true,
                         minlength: 8,
                         maxlength: 125,
-                    },
-                    status: {
-                        required: true,
-                        range: [0, 1],
                     },
                     permissao: {
                         required: true,
@@ -276,10 +313,6 @@
                         email: "O E-mail do Usuário deve conter um endereço de e-mail válido.",
                         minlength: "O E-mail deve conter no mínimo {0} caracteres.",
                         maxlength: "O E-mail deve conter no máximo {0} caracteres.",
-                    },
-                    status: {
-                        required: "O Status do Usuário é obrigatório.",
-                        range: "O Status do Usuário é inválido.",
                     },
                     permissao: {
                         required: "O nível de permissão do usuário é obrigatório.",
@@ -306,13 +339,12 @@
                     var formData = {
                         nome: $('#nome').val(),
                         email: $('#email').val(),
-                        ativo: $('#status').val(),
                         permissao: $('#permissao').val(),
                     };
 
                     var userId = $('#userModal').data('id');
                     var url = userId ? "<?= base_url('users/edit/') ?>" + userId : "<?= base_url('users/add') ?>";
-                    $('#save').addClass('disabled');
+                    $('#salvar').addClass('disabled');
 
                     $.ajax({
                         url: url,
@@ -344,7 +376,7 @@
                         },
                         complete: function () {
                             $('#busca_usuario')[0].reset();
-                            $('#save').removeClass('disabled');
+                            $('#salvar').removeClass('disabled');
                         }
                     });
                 }
