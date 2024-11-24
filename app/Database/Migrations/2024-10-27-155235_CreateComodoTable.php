@@ -21,8 +21,23 @@ class CreateComodoTable extends Migration
         ]);
 
         $this->forge->addPrimaryKey('COD_COMODO');
-
         $this->forge->createTable('COMODO', true);
+
+        # Insercao de dados padrao\
+        $dataArray = [
+            "BANHEIRO",
+            "COPA",
+            "COZINHA",
+            "SALA",
+            "QUARTO 1",
+            "QUARTO 3",
+            "QUARTO AP",
+        ];
+
+        foreach ($dataArray as $value) {
+            $this->db->table('COMODO')->insert(['NOME' => $value,]);
+        }
+        
     }
 
     public function down() {

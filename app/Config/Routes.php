@@ -16,6 +16,27 @@ $routes->get('/sobre', 'Sobre::index');
 // $routes->match(['GET', 'POST'], '/analise/load/json', 'Analise::loadJson');
 #Planta
 
+#Rede
+$routes->get('/redes/list', 'Rede::index');
+$routes->match(['GET', 'POST'], '/redes/list/json', 'Rede::json_list');
+$routes->match(['GET', 'POST'], '/redes/(add)', 'Rede::upsert/$1');
+$routes->match(['GET', 'POST'], '/redes/(edit)/(:num)', 'Rede::upsert/$1/$2');
+$routes->match(['GET', 'POST'], '/redes/delete/(:num)', 'Rede::redeDelete/$1');
+
+#Cômodo
+$routes->get('/comodos/list', 'Comodo::index');
+$routes->match(['GET', 'POST'], '/comodos/list/json', 'Comodo::json_list');
+$routes->match(['GET', 'POST'], '/comodos/(add)', 'Comodo::upsert/$1');
+$routes->match(['GET', 'POST'], '/comodos/(edit)/(:num)', 'Comodo::upsert/$1/$2');
+$routes->match(['GET', 'POST'], '/comodos/delete/(:num)', 'Comodo::comodoDelete/$1');
+
+#Sinal
+$routes->get('/sinais/list', 'Sinal::index');
+$routes->match(['GET', 'POST'], '/sinais/list/json', 'Sinal::json_list');
+$routes->match(['GET', 'POST'], '/sinais/(add)', 'Sinal::upsert/$1');
+$routes->match(['GET', 'POST'], '/sinais/(edit)/(:num)', 'Sinal::upsert/$1/$2');
+$routes->match(['GET', 'POST'], '/sinais/delete/(:num)', 'Sinal::sinalDelete/$1');
+
 #User
 $routes->match(['GET', 'POST'], '/users/list', 'User::index');
 $routes->match(['GET', 'POST'], '/users/list/json', 'User::json_list');
