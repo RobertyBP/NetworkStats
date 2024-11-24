@@ -1,4 +1,8 @@
-<?= $this->extend('layouts/default') ?>    
+<?= $this->extend('layouts/default') ?>
+
+<?= $this->section('more-styles') ?>
+<link rel="stylesheet" href="<?= base_url('assets/DataTables-2.0.3/css/dataTables.bootstrap5.min.css') ?>">
+<?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
 <!--======================================================================================================================= -->
@@ -48,13 +52,45 @@
             <div class="row justify-content-center pb-3 align-items-center">
                 <div class="col-4 px-1">
                     <div class="input-group shadow-sm">
-                        <span class="input-group-text">Cômodo</span>
-                        <input type="text" class="form-control" name="filtroComodo" id="filtroComodo" maxlength="125">
+                        <label for="filtroRede" class="input-group-text">Rede</label>
+                        <select class="form-select" id="filtroRede" name="filtroRede">
+                            <option selected value="0">Selecione...</option>
+                            <?php foreach ($redes as $rede) : ?>
+                                <option value="<?= $rede['cod_rede'] ?>"><?= $rede['rede'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center pb-3 align-items-center">
+                <div class="col-4 px-1">
+                    <div class="input-group shadow-sm">
+                        <label for="filtroComodo" class="input-group-text">Cômodo</label>
+                        <select class="form-select" id="filtroComodo" name="filtroComodo">
+                            <option selected value="0">Selecione...</option>
+                            <?php foreach ($comodos as $comodo) : ?>
+                                <option value="<?= $comodo['cod_comodo'] ?>"><?= $comodo['comodo'] ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row justify-content-center pb-3 align-items-center">
+                <div class="col-auto px-1">
+                    <div class="input-group shadow-sm">
+                        <label for="filtroFrequencia" class="input-group-text">Frequência</label>
+                        <select class="form-select" id="filtroFrequencia" name="filtroFrequencia">
+                            <option selected value="0">Selecione...</option>
+                            <option value="2.4Ghz">2.4Ghz</option>
+                            <option value="5Ghz">5Ghz</option>
+                        </select>
                     </div>
                 </div>
                 <div class="col-auto px-1">
-                    <button class="btn btn-primary shadow-sm py-1 px-2" id="filter">
-                        <span class="material-symbols-rounded align-middle">filter_alt</span> Search
+                    <button class="btn btn-primary shadow-sm py-1 px-2" id="filtrar">
+                        <span class="material-symbols-rounded align-middle">filter_alt</span> Filtrar
                     </button>
                 </div>
                 <div class="col-auto px-0">
@@ -62,22 +98,21 @@
                         <span class="material-symbols-rounded align-middle">filter_alt_off</span>
                     </a>
                 </div>
-            </div>   
+            </div>
         </form>
 
         <div class="row justify-content-center small">
-            <div class="col-12 mb-5 p-3 table-responsive bg-dark">
-                <table id="listar_analise" class="table table-hover table-md align-middle">
-                    <thead class="bg-primary bg-opacity-10">
+            <div class="col-12 mb-5 p-3 table-responsive text-white">
+                <table id="listar_analise" class="table table-hover table-striped table-sm align-middle">
+                    <thead style="background-color: #1E3E62;">
                         <tr>
-                            <!-- <th scope="col" class="align-middle col"><span class="collapsed material-symbols-rounded p-0 m-0 btn text-start" id="toggleDetails">keyboard_double_arrow_down</span></th> -->
-                            <th scope="col" class="col">Comodo</th> <!-- Nome do cômodo -->
-                            <th scope="col" class="col">Rede</th> <!-- Nome (alias) da rede -->
-                            <th scope="col" class="col">Frequência</th> <!-- Frequencia da Rede (2.4 / 5Ghz) -->
-                            <th scope="col" class="col">Velocidade</th> <!-- Velocidade da Rede na medição -->
-                            <th scope="col" class="col">Sinal</th> <!-- dBm -->
-                            <th scope="col" class="col">Interferência</th>
-                            <th scope="col" class="col">Data da Análise</th>
+                            <th scope="col" class="col text-white">Cômodo</th>
+                            <th scope="col" class="col text-white">Rede</th>
+                            <th scope="col" class="col text-white">Frequência</th>
+                            <th scope="col" class="col text-white">Velocidade</th>
+                            <th scope="col" class="col text-white">dBm</th>
+                            <th scope="col" class="col text-white">Interferência</th>
+                            <th scope="col" class="col text-white">Data da Análise</th>
                         </tr>
                     </thead>
                 </table>
@@ -100,161 +135,59 @@
 <script src="<?= base_url("/assets/js/validation_messages.js") ?>"></script>
 <script type="text/javascript">
 
+DataTable.Buttons.defaults.dom.button.className = 'btn'; // Sobrescreve a estilização padrão do datatables sobre os botões
+
     var table = new DataTable('#listar_analise', {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "<?= base_url('analise/load/json') ?>",
+            url: "<?= base_url("analise/list/json") ?>",
             type: "POST",
             data: function(d) {
-                d.filtroComodo = $('#filtroComodo').val();
+                d.filtroRede = $("#filtroRede").val();
+                d.filtroComodo = $("#filtroComodo").val();
+                d.filtroFrequencia = $("#filtroFrequencia").val();
             }
         },
         info: true,
         responsive: true,
         pageLength: 10,
-        order: [[1, 'asc']],
-        language: { url: '<?= base_url('assets/datatables-pt-BR.json') ?>', decimal: ',', thousands: '.' },
+        order: [[0, 'asc']],
+        language:{url: '<?= base_url("assets/datatables-pt-BR.json") ?>', decimal: ',', thousands: '.' },
         layout: {
             topStart: {},
             topEnd: 'pageLength',
         },
         columnDefs: [{ targets: "_all", orderSequence: ['asc', 'desc'], className: "dt-body-left dt-head-left" }],
         columns: [
-            { data: 'ID', visible: false, searchable: false },
-            { data: 'NOME' },
-            { data: 'ID_ORGAO', visible: false, searchable: false },
-            { data: 'NOME_ORGAO' },
-            {
-                data: 'ACOES',
-                searchable: false,
-                orderable: false,
-                className: 'dt-body-center dt-head-center',
-                render: function (data, type, row) {
-                    return '<a href="#" class="btn btn-sm btn-outline-success p-0 editar-unidade" data-id="' + row['ID'] + '"><span class="material-symbols-rounded align-middle tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar">edit</span></a>'
-                    + '<a href="<?= base_url("unidades/log/") ?>' + row['ID'] + '" class="btn btn-sm btn-outline-secondary p-0 historico-unidade" id="unidadeHistory"><span class="material-symbols-rounded align-middle tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Histórico de Alterações">history</span></a>';
-                }
-            }
-        ]
-    });
+            { data: 'COMODO' },
+            { data: 'REDE' },
+            { data: 'FREQUENCIA' },
+            { data: 'VELOCIDADE' },
+            { data: 'NIVEL_SINAL' },
+            { data: 'INTERFERENCIA' },
+            { data: 'DT_ANALISE' },
+        ],
+
+    } );
 
     // Carregamento de Tooltip ao iniciar o DataTables
     table.on('draw.dt', function () {
         $('[data-bs-toggle="tooltip"]').tooltip();
     });
 
-    // Validação do formulário
     $('#filtrar').on('click', function(event) {
         event.preventDefault();
         table.ajax.reload();
     });
 
-    // Limpeza do formulário de filtragem
+    // Limpar os filtros do datatables
     $('#limpar').on('click', function(){
-        $('#msgError').attr('hidden', '');
-        $('#buscar_unidades')[0].reset();
-        table.ajax.reload(); // Reload na tabela
-    });
-
-    $('#cancelar').on('click', function () {
-        $('#unidadeModal').modal('hide');
-    });
-
-    // Ação para abrir modal de edição ao clicar no botão edit
-    $('#listar_unidades').on('click', '.editar-unidade', function(e) {
-        e.preventDefault();
-        var rowData = table.row($(this).parents('tr')).data();
-        $('#unidadeModalLabel').text('Editar Unidade');
-        $('#nome').val(rowData['NOME']);
-        $('#orgao').val(rowData['ID_ORGAO']);
-        $('#orgao').prop('disabled', true);
-        $('#unidadeModal').data('id', rowData['ID']);
-        $('#unidadeModal').modal('show');
+        $('#filtro_analise')[0].reset();
+        table.ajax.reload(); // Table reload
     });
 
 
-    $(document).ready(function () {
-
-        // Validação dos campos do formulário
-        validator = $('#unidadeForm').validate({
-            onfocusout: false,  // Desativa a revalidação quando o campo perde o foco
-            onkeyup: false,     // Desativa a revalidação ao digitar
-            onclick: false,     // Desativa a revalidação ao clicar (útil para checkboxes e radios)
-            rules: {
-                nome: {
-                    required: true,
-                    maxlength: 125,
-                },
-                orgao: {
-                    required: true,
-                },
-            },
-            messages: {
-                nome: {
-                    required: "O campo NOME deve ser preenchido.",
-                    maxlength: "O nome deve ter no máximo {0} caracteres.",
-                },
-                orgao: {
-                    required: "Um Órgão deve ser selecionado.",
-                },
-            },
-            invalidHandler: function(e,validator) {
-                // Construção do bloco de mensagem do toast com base nos erros retornados:
-                var errorMsg = "<ul>";
-                // validator.errorList contains an array of objects, where each object has properties "element" and "message".  element is the actual HTML Input.
-                for (var i = 0; i < validator.errorList.length; i++){
-                    errorMsg += "<li>" + validator.errorList[i].message + "</li>";
-                }
-                errorMsg += "</ul>";
-                mostrarMensagem('error', errorMsg);
-            },
-            errorPlacement: function (error, element) {},
-            highlight: function (element, errorClass, validClass) {
-                $(element).addClass('is-invalid');
-            },
-            unhighlight: function (element, errorClass, validClass) {
-                $(element).removeClass('is-invalid');
-            },
-            submitHandler: function (form) {
-                // Se a validação for bem-sucedida, envia os dados para o servidor
-                var formData = {
-                    nome: $('#nome').val(),
-                    orgao: $('#orgao').val(),
-                };
-                var unidadeId = $('#unidadeModal').data('id');
-                var url = unidadeId ? "<?= base_url('unidades/edit/') ?>" + unidadeId : "<?= base_url('unidades/add') ?>";
-                $('#salvar').addClass('disabled');
-                $.ajax({
-                    url: url,
-                    type: "POST",
-                    data: JSON.stringify(formData),
-                    contentType: "application/json; charset=utf-8",
-                    success: function(response) {
-                        if (response.status === 'error') {
-                            mostrarMensagem('danger', response.message);
-                        } else {
-                            mostrarMensagem('success', unidadeId ? 'Unidade atualizada com sucesso!' : 'Unidade cadastrada com sucesso!');
-                            $('#buscar_unidades')[0].reset();
-                            table.ajax.reload();
-                            $('#unidadeModal').modal('hide');
-                        }
-                    },
-                    error: function(xhr, status, error) {
-                        mostrarMensagem('danger', 'Erro ao salvar unidade: ' + error);
-                    },
-                    complete: function () {
-                        $('#buscar_unidades')[0].reset();
-                        $('#salvar').removeClass('disabled');
-                    }
-                });
-            } 
-        });
-        // Ajuste do evento de clique no botão "Salvar"
-        $('#salvar').click(function () {
-            $('#unidadeForm').submit(); // Submeter o formulário para acionar a validação
-        });
-    });
-    
 </script>
 
 <?= $this->endsection() ?>

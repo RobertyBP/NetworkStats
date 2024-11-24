@@ -45,5 +45,8 @@ $routes->match(['GET', 'POST'], '/users/(edit)/(:num)', 'User::upsert/$1/$2');
 $routes->match(['GET', 'POST'], '/users/delete/(:num)', 'User::userDelete/$1');
 $routes->match(['GET', 'POST'], '/user/account/(:any)/changePassword', 'User::alterarSenha/$1');
 
+#Index
+$routes->match(['GET', 'POST'], '/analise/list/json', 'Index::json_list');
+
 #Redirect
 $routes->addRedirect('(.+)', '/');
