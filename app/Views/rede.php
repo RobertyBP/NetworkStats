@@ -97,7 +97,6 @@
                             <th scope="col" class="col text-white">COD_REDE</th><!-- Apenas para validação interna. Não é exibido no DATATABLES -->
                             <th scope="col" class="col text-white">Rede</th>
                             <th scope="col" class="col-2 text-white">Pacote de Dados</th>
-                            <th scope="col" class="col text-white">Info</th>
                             <th scope="col" class="col-1 text-white">Ações</th>
                         </tr>
                     </thead>
@@ -159,16 +158,6 @@
             { data: 'COD_REDE', visible: false, searchable: false, orderable: false },
             { data: 'NOME' },
             { data: 'PACOTE_DADOS', orderable: false },
-            { 
-                data: 'INFO', 
-                orderable: false, 
-                searchable: false,
-                className: 'dt-body-center dt-head-center',
-                render: function (data, type, row) {
-                    return '<a class="btn btn-sm btn-outline-primary p-0 mx-1 info-rede" data-id="' + row['COD_REDE'] + '">' +
-                            '<span class="material-symbols-rounded align-middle tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Informações">info</span></a>'
-                }
-            },
             {
                 data: 'ACOES', 
                 searchable: false, 

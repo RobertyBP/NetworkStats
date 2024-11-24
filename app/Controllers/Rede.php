@@ -38,7 +38,7 @@ class Rede extends BaseController
         $vars['nome'] = uniformiza_string($this->request->getPost('filtroRede'));
 
         # Definição da ordem lógica dos índices presentes no DataTables:
-        $cols = ['COD_REDE', 'NOME', 'PACOTE_DADOS', 'INFO', 'ACOES'];
+        $cols = ['COD_REDE', 'NOME', 'PACOTE_DADOS', 'ACOES'];
 
         # Inicialização da variável array4json como array vazio:
         $array4json = array(); // Abriga os dados retornados pela query
