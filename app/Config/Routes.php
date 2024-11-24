@@ -12,10 +12,6 @@ $routes->get('/logout', 'Login::logout');
 $routes->get('/home', 'Index::index');
 $routes->get('/sobre', 'Sobre::index');
 
-#Análise de Rede
-// $routes->match(['GET', 'POST'], '/analise/load/json', 'Analise::loadJson');
-#Planta
-
 #Rede
 $routes->get('/redes/list', 'Rede::index');
 $routes->match(['GET', 'POST'], '/redes/list/json', 'Rede::json_list');

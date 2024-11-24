@@ -12,6 +12,8 @@ use CodeIgniter\Filters\InvalidChars;
 use CodeIgniter\Filters\PageCache;
 use CodeIgniter\Filters\PerformanceMetrics;
 use CodeIgniter\Filters\SecureHeaders;
+use App\Filters\AdminFilter;
+use App\Filters\LoggedFilter;
 
 class Filters extends BaseFilters
 {
@@ -34,6 +36,8 @@ class Filters extends BaseFilters
         'forcehttps'    => ForceHTTPS::class,
         'pagecache'     => PageCache::class,
         'performance'   => PerformanceMetrics::class,
+        'logged'        => LoggedFilter::class,
+        'admin'         => AdminFilter::class,
     ];
 
     /**
@@ -69,15 +73,24 @@ class Filters extends BaseFilters
      */
     public array $globals = [
         'before' => [
-            // 'honeypot',
-            // 'csrf',
-            // 'invalidchars',
+            'logged' => ['except' => ['login', 'logout']], 
+            'admin' => [
+                'except' => [
+                    '/', // Página inicial
+                    'login', // Login
+                    'logout', // Logout
+                    'sobre', // Página sobre
+                    'home', // Página inicial do usuário
+                    'user/account/*/changePassword', // Troca de senha
+                    'analise/list/json', // Análise de rede
+                ],
+            ],
         ],
         'after' => [
-            // 'honeypot',
-            // 'secureheaders',
+            'toolbar',
         ],
     ];
+    
 
     /**
      * List of filter aliases that works on a
