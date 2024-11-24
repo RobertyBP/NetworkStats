@@ -54,7 +54,7 @@ class CreateUserTable extends Migration
 
         $this->db->table('USER')->insert([
             'UUID' => $userModel->generateUUID(),
-            'EMAIL' => 'admin@networkstats.com',
+            'EMAIL' => 'admin@admin.com',
             'NOME' => 'SYS ADMIN',
             'SENHA' => password_hash('adminroot', PASSWORD_BCRYPT),
             'PERMISSAO' => 1
