@@ -275,7 +275,7 @@
         }
     });
 
-    // Gráfico de Interferências - Quantidade de Interferências por Cômodo
+    // Gráfico de Interferências - Quantidade de Interferências cadastradas por Cômodo
     const ctxInterferencia = document.getElementById('chartInterferencia').getContext('2d');
     const chartInterferencia = new Chart(ctxInterferencia, {
         type: 'bar',
@@ -300,7 +300,6 @@
                             const dataIndex = tooltipItem.dataIndex;
                             const interferencias = tooltipItem.chart.data.datasets[datasetIndex].data[dataIndex];
                             
-                            // Exibe a quantidade de interferências (número)
                             return `Quantidade de Interferências: ${interferencias}`;
                         }
                     }
@@ -310,11 +309,11 @@
         }
     });
 
-    // Atualizar gráficos quando a tabela for desenhada
+    // Atualiza os gráficos quando a tabela for desenhada
     table.on('draw', function () {
         const data = table.rows({ search: 'applied' }).data();
 
-        // Atualizar gráfico de Velocidade
+        // Atualiza o gráfico de Velocidade
         const labelsVelocidade = [];
         const valuesVelocidade = [];
         const labelsMedia = [];
@@ -334,11 +333,11 @@
             const nivelSinal = parseFloat(data[i].NIVEL_SINAL);
             const interferencias = data[i].INTERFERENCIA;
 
-            // Adiciona dados para gráfico de Velocidade (considera a frequência)
+            // Adiciona dados para gráfico de Velocidade (com base na frequencia)
             labelsVelocidade.push(`${comodo} (${frequencia})`);
             valuesVelocidade.push(velocidade);
 
-            // Média de Velocidade (2.4Ghz + 5Ghz para cada cômodo)
+            // Média de Velocidade (2.4Ghz + 5Ghz / 2 para cada cômodo)
             if (!comodosVelocidade[comodo]) {
                 comodosVelocidade[comodo] = { total: 0, count: 0 };
             }
@@ -362,35 +361,35 @@
             }
         }
 
-        // Calcular e atualizar a média de velocidade por cômodo
+        // Calcula e atualiza a média de velocidade por cômodo
         Object.keys(comodosVelocidade).forEach(comodo => {
             const mediaVelocidade = comodosVelocidade[comodo].total / comodosVelocidade[comodo].count;
             labelsMedia.push(comodo);
             valuesMedia.push(mediaVelocidade);
         });
 
-        // Atualizar gráfico de Velocidade
+        // Atualiza o gráfico de Velocidade
         chartVelocidade.data.labels = labelsVelocidade;
         chartVelocidade.data.datasets[0].data = valuesVelocidade;
         chartVelocidade.update();
 
-        // Atualizar gráfico de Média de Velocidade
+        // Atualiza o gráfico de Média de Velocidade
         chartMediaVelocidade.data.labels = labelsMedia;
         chartMediaVelocidade.data.datasets[0].data = valuesMedia;
         chartMediaVelocidade.update();
 
-        // Atualizar gráfico de Nível de Sinal
+        // Atualiza o gráfico de Nível de Sinal
         chartNivelSinal.data.labels = labelsSinal;
         chartNivelSinal.data.datasets[0].data = valuesSinal;
         chartNivelSinal.update();
 
-        // Atualizar gráfico de Interferências (quantidade)
+        // Atualiza o gráfico de Interferências (quantidade)
         chartInterferencia.data.labels = labelsInterferencia;
         chartInterferencia.data.datasets[0].data = valuesInterferencia;
         chartInterferencia.update();
     });
 
-    // Filtrar e carregar os gráficos com os filtros
+    // Filtra e carrega os gráficos com os filtros do DataTables
     $('#filtrar').click(() => table.ajax.reload());
     $('#limpar').click(() => { $('#filtro_analise')[0].reset(); table.ajax.reload(); });
 </script>
