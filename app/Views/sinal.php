@@ -338,6 +338,11 @@
         });
 
         $(document).ready(function () {
+            // Adiciona método personalizado para validação de select com valor padrão "0"
+            $.validator.addMethod("valueNotEquals", function (value, element, arg) {
+                return value !== arg;
+            }, "Selecione uma opção válida.");
+
             // Validação dos campos do formulário
             validator = $('#sinal_form').validate({
                 onfocusout: false,
@@ -346,12 +351,15 @@
                 rules: {
                     rede: {
                         required: true,
+                        valueNotEquals: "0", // Verifica se o valor não é "0"
                     },
                     frequencia: {
                         required: true,
+                        valueNotEquals: "0", // Verifica se o valor não é "0"
                     },
                     comodo: {
                         required: true,
+                        valueNotEquals: "0", // Verifica se o valor não é "0"
                     },
                     velocidade: {
                         required: true,
@@ -370,12 +378,15 @@
                 messages: {
                     rede: {
                         required: "A Rede é obrigatória.",
+                        valueNotEquals: "Selecione uma Rede válida.",
                     },
                     frequencia: {
                         required: "A Frequência é obrigatória.",
+                        valueNotEquals: "Selecione uma Frequência válida.",
                     },
                     comodo: {
                         required: "O Cômodo é obrigatório.",
+                        valueNotEquals: "Selecione um Cômodo válido.",
                     },
                     velocidade: {
                         required: "A Velocidade é obrigatória.",
@@ -430,7 +441,7 @@
                                 mostrarMensagem('danger', response.message);
                             } else {
 
-                                if(sinalID) {
+                                if (sinalID) {
                                     mostrarMensagem('success', 'O sinal foi atualizado com sucesso!');
                                 } else {
                                     mostrarMensagem('success', 'O sinal foi adicionado com sucesso!');
@@ -452,6 +463,7 @@
                 }
             });
         });
+
 
         $('#salvar').click(function () {
             $('#sinal_form').submit(); // Form submit -> Acionamento da validação
