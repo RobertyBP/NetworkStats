@@ -338,7 +338,6 @@
         });
 
         $(document).ready(function () {
-            // Adiciona método personalizado para validação de select com valor padrão "0"
             $.validator.addMethod("valueNotEquals", function (value, element, arg) {
                 return value !== arg;
             }, "Selecione uma opção válida.");
