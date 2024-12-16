@@ -83,7 +83,7 @@ class User extends BaseController
     }
 
     # Usuário Update & Insert
-    public function upsert($operation, $id = null) {
+    public function upsert($operacao, $id = null) {
 
         if(!$this->request->is('POST'))
             return redirect()->to(base_url('home'));
@@ -121,7 +121,7 @@ class User extends BaseController
     
         $userModel = new UserModel();
 
-        switch($operation) {
+        switch($operacao) {
         # Start
             case 'add' :
 

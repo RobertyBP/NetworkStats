@@ -2,6 +2,7 @@
 
 namespace App\Database\Migrations;
 
+use App\Models\UserModel;
 use CodeIgniter\Database\Migration;
 
 class CreateUserTable extends Migration
@@ -47,6 +48,18 @@ class CreateUserTable extends Migration
         $this->forge->addPrimaryKey('COD_USER');
 
         $this->forge->createTable('USER', true);
+
+        # Criação de usuário padrão
+        $userModel = new UserModel();
+
+        $this->db->table('USER')->insert([
+            'UUID' => $userModel->generateUUID(),
+            'EMAIL' => 'admin@admin.com',
+            'NOME' => 'SYS ADMIN',
+            'SENHA' => password_hash('adminroot', PASSWORD_BCRYPT),
+            'PERMISSAO' => 1
+        ]);
+
     }
 
     public function down()

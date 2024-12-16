@@ -70,6 +70,12 @@
                                 <li><span class="dropdown-header">Administração</span></li>
                                 <li><a href="<?= base_url('users/list') ?>" class="dropdown-item"><span class="material-symbols-rounded align-bottom">settings_account_box</span> Gestão de Usuários</a></li>
                                 <li><hr class="dropdown-divider"></li>
+                                <li class="mt-1"><a href="<?= base_url('redes/list') ?>" class="dropdown-item"><span class="material-symbols-rounded align-bottom">wifi</span> Gestão de Redes</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="mt-1"><a href="<?= base_url('comodos/list') ?>" class="dropdown-item"><span class="material-symbols-rounded align-bottom">house</span> Gestão de Cômodos</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li class="mt-1"><a href="<?= base_url('sinais/list') ?>" class="dropdown-item"><span class="material-symbols-rounded align-bottom">signal_cellular_alt</span> Gestão de Sinais</a></li>
+                                <li><hr class="dropdown-divider pt-1 pb-1"></li>
                             <?php endif ?>
                             <li><span class="dropdown-header">Conta</span></li>
                             <li><a href="<?= base_url('user/account/') . session('uuid') ?>/changePassword" class="dropdown-item"><span class="material-symbols-rounded align-bottom">passkey</span> Alterar minha senha</a></li>

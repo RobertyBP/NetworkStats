@@ -1,10 +1,15 @@
-<?= $this->extend('layouts/default') ?>    
+<?= $this->extend('layouts/default') ?>
+
+<?= $this->section('more-styles') ?>
+<link rel="stylesheet" href="<?= base_url('assets/DataTables-2.0.3/css/dataTables.bootstrap5.min.css') ?>">
+<?= $this->endSection() ?>
 
 <?= $this->section('content') ?>
-<!--======================================================================================================================= -->
-<!-- INTRODUCAO -->
 
-<section class="home-container text-center d-flex flex-column align-items-center justify-content-center" id="introducao" style="min-height: 100vh; background-color: var(--cor-home);">
+<!--======================================================================================================================= -->
+<!-- INTRODUÇÃO -->
+
+<section class="home-container py-5 text-center d-flex flex-column align-items-center justify-content-center vh-100" id="introducao" style="min-height: 100vh; background-color: var(--cor-home);">
     <div class="content-home p-4">
         <h1 class="display-4" style="color: var(--cor-fonte-home);">Análise de Rede Wi-Fi Residencial</h1>
         <h3 class="mt-3" style="color: var(--cor-fonte-home2);">Mapeamento de Sinal Wi-Fi</h3>
@@ -18,7 +23,7 @@
 <!-- PLANTA -->
 
 <section class="planta-container py-5 vh-100" id="planta" style="background-color: var(--cor-planta);">
-    <div class="container">
+    <div class="container mt-5">
         <h2 class="text-white mb-4 pt-4">Planta</h2>
         <div class="row">
             <div class="col-md-6">
@@ -26,7 +31,7 @@
                     <img src="<?= base_url('assets/img/planta.png') ?>" class="img-fluid rounded" alt="Planta da casa" style="height: 70vh; width: auto;">
                 </div>
             </div>
-            <div class="col-md-6 d-flex align-items-end"> 
+            <div class="col-md-6 d-flex align-items-end">
                 <div class="text-container">
                     <p class="text-white">Passe o mouse sobre cada cômodo para visualizar as características da rede no local.</p>
                 </div>
@@ -36,60 +41,116 @@
 </section>
 
 <!--======================================================================================================================= -->
-<!-- ANALISE -->
-
+<!-- ANÁLISE -->
+ 
 <section class="analise-container text-white" id="analise" style="background-color: var(--cor-analise); min-height: 100vh; padding-top: 100px;">
-    <div class="container">
+    <div class="container mt-5">
         <h2 class="mb-4">Análise de Rede</h2>
     </div>
     <div class="container pt-5 mt-3">
-
         <form id="filtro_analise" class="mb-4" method="post" accept-charset="utf-8">
             <div class="row justify-content-center pb-3 align-items-center">
-                <div class="col-4 px-1">
-                    <div class="input-group shadow-sm">
-                        <span class="input-group-text">Cômodo</span>
-                        <input type="text" class="form-control" name="filtroComodo" id="filtroComodo" maxlength="125">
-                    </div>
+                <div class="col-md-3">
+                    <label for="filtroRede" class="form-label">Rede</label>
+                    <select class="form-select" id="filtroRede" name="filtroRede">
+                        <option selected value="0">Selecione...</option>
+                        <?php foreach ($redes as $rede) : ?>
+                            <option value="<?= $rede['cod_rede'] ?>"><?= $rede['rede'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
                 </div>
-                <div class="col-auto px-1">
-                    <button class="btn btn-primary shadow-sm py-1 px-2" id="filter">
-                        <span class="material-symbols-rounded align-middle">filter_alt</span> Search
+                <div class="col-md-3">
+                    <label for="filtroComodo" class="form-label">Cômodo</label>
+                    <select class="form-select" id="filtroComodo" name="filtroComodo">
+                        <option selected value="0">Selecione...</option>
+                        <?php foreach ($comodos as $comodo) : ?>
+                            <option value="<?= $comodo['cod_comodo'] ?>"><?= $comodo['comodo'] ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <label for="filtroFrequencia" class="form-label">Frequência</label>
+                    <select class="form-select" id="filtroFrequencia" name="filtroFrequencia">
+                        <option selected value="0">Selecione...</option>
+                        <option value="2.4Ghz">2.4Ghz</option>
+                        <option value="5Ghz">5Ghz</option>
+                    </select>
+                </div>
+                <div class="col-md-auto mt-auto">
+                    <button class="btn btn-primary shadow-sm py-1 px-3" id="filtrar">
+                        <span class="material-symbols-rounded align-middle">filter_alt</span> Filtrar
                     </button>
                 </div>
-                <div class="col-auto px-0">
-                    <a class="btn btn-outline-primary shadow-sm py-1 px-2 tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Limpar Filtros" id="limpar">
+                <div class="col-md-auto px-0 mt-auto">
+                    <a class="btn btn-outline-primary shadow-sm py-1 px-3 tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Limpar Filtros" id="limpar">
                         <span class="material-symbols-rounded align-middle">filter_alt_off</span>
                     </a>
                 </div>
-            </div>   
+            </div>
         </form>
 
         <div class="row justify-content-center small">
-            <div class="col-12 mb-5 p-3 table-responsive bg-dark">
-                <table id="listar_analise" class="table table-hover table-md align-middle">
-                    <thead class="bg-primary bg-opacity-10">
+            <div class="col-12 mb-5 p-3 table-responsive text-white">
+                <table id="listar_analise" class="table table-hover table-striped table-md align-middle">
+                    <thead style="background-color: #1E3E62;">
                         <tr>
-                            <!-- <th scope="col" class="align-middle col"><span class="collapsed material-symbols-rounded p-0 m-0 btn text-start" id="toggleDetails">keyboard_double_arrow_down</span></th> -->
-                            <th scope="col" class="col">Comodo</th> <!-- Nome do cômodo -->
-                            <th scope="col" class="col">Rede</th> <!-- Nome (alias) da rede -->
-                            <th scope="col" class="col">Frequência</th> <!-- Frequencia da Rede (2.4 / 5Ghz) -->
-                            <th scope="col" class="col">Velocidade</th> <!-- Velocidade da Rede na medição -->
-                            <th scope="col" class="col">Sinal</th> <!-- dBm -->
-                            <th scope="col" class="col">Interferência</th>
-                            <th scope="col" class="col">Data da Análise</th>
+                            <th scope="col" class="col text-white">Cômodo</th>
+                            <th scope="col" class="col text-white">Rede</th>
+                            <th scope="col" class="col text-white">Frequência</th>
+                            <th scope="col" class="col text-white">Velocidade</th>
+                            <th scope="col" class="col text-white">dBm</th>
+                            <th scope="col" class="col text-white">Interferência</th>
+                            <th scope="col" class="col text-white">Data da Análise</th>
                         </tr>
                     </thead>
                 </table>
             </div>
         </div>
 
+        <!-- DASHBOARDS -->
+        <div class="row row-cols-1 row-cols-md-2 g-4 mb-5">
+            <div class="col">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <canvas id="chartVelocidade"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <canvas id="chartMediaVelocidade"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <canvas id="chartNivelSinal"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card shadow">
+                    <div class="card-body">
+                        <canvas id="chartInterferencia"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
     </div>
 </section>
-<?= $this->endsection() ?>
+
+<!--======================================================================================================================= -->
+
+<?= $this->endSection() ?>
+
 <!-- *********************************************** -->
 <!-- *********************************************** -->
 <?= $this->section('more-scripts') ?>
+<!-- Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <script src="<?= base_url('assets/DataTables-2.0.3/js/dataTables.min.js') ?>"></script>
 <script src="<?= base_url('assets/DataTables-2.0.3/js/dataTables.bootstrap5.min.js') ?>"></script>
@@ -100,42 +161,39 @@
 <script src="<?= base_url("/assets/js/validation_messages.js") ?>"></script>
 <script type="text/javascript">
 
+    DataTable.Buttons.defaults.dom.button.className = 'btn'; // Sobrescreve a estilização padrão do datatables sobre os botões
+
     var table = new DataTable('#listar_analise', {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "<?= base_url('analise/load/json') ?>",
+            url: "<?= base_url("analise/list/json") ?>",
             type: "POST",
             data: function(d) {
-                d.filtroComodo = $('#filtroComodo').val();
+                d.filtroRede = $("#filtroRede").val();
+                d.filtroComodo = $("#filtroComodo").val();
+                d.filtroFrequencia = $("#filtroFrequencia").val();
             }
         },
         info: true,
         responsive: true,
         pageLength: 10,
-        order: [[1, 'asc']],
-        language: { url: '<?= base_url('assets/datatables-pt-BR.json') ?>', decimal: ',', thousands: '.' },
+        order: [[0, 'asc']],
+        language:{url: '<?= base_url("assets/datatables-pt-BR.json") ?>', decimal: ',', thousands: '.' },
         layout: {
             topStart: {},
             topEnd: 'pageLength',
         },
         columnDefs: [{ targets: "_all", orderSequence: ['asc', 'desc'], className: "dt-body-left dt-head-left" }],
         columns: [
-            { data: 'ID', visible: false, searchable: false },
-            { data: 'NOME' },
-            { data: 'ID_ORGAO', visible: false, searchable: false },
-            { data: 'NOME_ORGAO' },
-            {
-                data: 'ACOES',
-                searchable: false,
-                orderable: false,
-                className: 'dt-body-center dt-head-center',
-                render: function (data, type, row) {
-                    return '<a href="#" class="btn btn-sm btn-outline-success p-0 editar-unidade" data-id="' + row['ID'] + '"><span class="material-symbols-rounded align-middle tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar">edit</span></a>'
-                    + '<a href="<?= base_url("unidades/log/") ?>' + row['ID'] + '" class="btn btn-sm btn-outline-secondary p-0 historico-unidade" id="unidadeHistory"><span class="material-symbols-rounded align-middle tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Histórico de Alterações">history</span></a>';
-                }
-            }
-        ]
+            { data: 'COMODO' },
+            { data: 'REDE' },
+            { data: 'FREQUENCIA' },
+            { data: 'VELOCIDADE' },
+            { data: 'NIVEL_SINAL' },
+            { data: 'INTERFERENCIA' },
+            { data: 'DT_ANALISE' },
+        ],
     });
 
     // Carregamento de Tooltip ao iniciar o DataTables
@@ -143,118 +201,197 @@
         $('[data-bs-toggle="tooltip"]').tooltip();
     });
 
-    // Validação do formulário
     $('#filtrar').on('click', function(event) {
         event.preventDefault();
         table.ajax.reload();
     });
 
-    // Limpeza do formulário de filtragem
+    // Limpar os filtros do datatables
     $('#limpar').on('click', function(){
-        $('#msgError').attr('hidden', '');
-        $('#buscar_unidades')[0].reset();
-        table.ajax.reload(); // Reload na tabela
+        $('#filtro_analise')[0].reset();
+        table.ajax.reload(); // Table reload
     });
 
-    $('#cancelar').on('click', function () {
-        $('#unidadeModal').modal('hide');
+    // Gráfico de Velocidade de Internet
+    const ctxVelocidade = document.getElementById('chartVelocidade').getContext('2d');
+    const chartVelocidade = new Chart(ctxVelocidade, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Velocidade (Mbps)',
+                data: [],
+                backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                borderColor: 'rgba(54, 162, 235, 1)',
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'top' } },
+            scales: { y: { beginAtZero: true } }
+        }
     });
 
-    // Ação para abrir modal de edição ao clicar no botão edit
-    $('#listar_unidades').on('click', '.editar-unidade', function(e) {
-        e.preventDefault();
-        var rowData = table.row($(this).parents('tr')).data();
-        $('#unidadeModalLabel').text('Editar Unidade');
-        $('#nome').val(rowData['NOME']);
-        $('#orgao').val(rowData['ID_ORGAO']);
-        $('#orgao').prop('disabled', true);
-        $('#unidadeModal').data('id', rowData['ID']);
-        $('#unidadeModal').modal('show');
+    // Gráfico de Média de Velocidade (2.4Ghz e 5Ghz por cômodo)
+    const ctxMediaVelocidade = document.getElementById('chartMediaVelocidade').getContext('2d');
+    const chartMediaVelocidade = new Chart(ctxMediaVelocidade, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Média de Velocidade (Mbps)',
+                data: [],
+                backgroundColor: 'rgba(75, 192, 192, 0.5)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'top' } },
+            scales: { y: { beginAtZero: true } }
+        }
     });
 
+    // Gráfico de Níveis de Sinal
+    const ctxNivelSinal = document.getElementById('chartNivelSinal').getContext('2d');
+    const chartNivelSinal = new Chart(ctxNivelSinal, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Nível de Sinal (dBm)',
+                data: [],
+                backgroundColor: 'rgba(153, 102, 255, 0.5)',
+                borderColor: 'rgba(153, 102, 255, 1)',
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: { legend: { position: 'top' } },
+            scales: { y: { beginAtZero: true } }
+        }
+    });
 
-    $(document).ready(function () {
-
-        // Validação dos campos do formulário
-        validator = $('#unidadeForm').validate({
-            onfocusout: false,  // Desativa a revalidação quando o campo perde o foco
-            onkeyup: false,     // Desativa a revalidação ao digitar
-            onclick: false,     // Desativa a revalidação ao clicar (útil para checkboxes e radios)
-            rules: {
-                nome: {
-                    required: true,
-                    maxlength: 125,
-                },
-                orgao: {
-                    required: true,
-                },
-            },
-            messages: {
-                nome: {
-                    required: "O campo NOME deve ser preenchido.",
-                    maxlength: "O nome deve ter no máximo {0} caracteres.",
-                },
-                orgao: {
-                    required: "Um Órgão deve ser selecionado.",
-                },
-            },
-            invalidHandler: function(e,validator) {
-                // Construção do bloco de mensagem do toast com base nos erros retornados:
-                var errorMsg = "<ul>";
-                // validator.errorList contains an array of objects, where each object has properties "element" and "message".  element is the actual HTML Input.
-                for (var i = 0; i < validator.errorList.length; i++){
-                    errorMsg += "<li>" + validator.errorList[i].message + "</li>";
-                }
-                errorMsg += "</ul>";
-                mostrarMensagem('error', errorMsg);
-            },
-            errorPlacement: function (error, element) {},
-            highlight: function (element, errorClass, validClass) {
-                $(element).addClass('is-invalid');
-            },
-            unhighlight: function (element, errorClass, validClass) {
-                $(element).removeClass('is-invalid');
-            },
-            submitHandler: function (form) {
-                // Se a validação for bem-sucedida, envia os dados para o servidor
-                var formData = {
-                    nome: $('#nome').val(),
-                    orgao: $('#orgao').val(),
-                };
-                var unidadeId = $('#unidadeModal').data('id');
-                var url = unidadeId ? "<?= base_url('unidades/edit/') ?>" + unidadeId : "<?= base_url('unidades/add') ?>";
-                $('#salvar').addClass('disabled');
-                $.ajax({
-                    url: url,
-                    type: "POST",
-                    data: JSON.stringify(formData),
-                    contentType: "application/json; charset=utf-8",
-                    success: function(response) {
-                        if (response.status === 'error') {
-                            mostrarMensagem('danger', response.message);
-                        } else {
-                            mostrarMensagem('success', unidadeId ? 'Unidade atualizada com sucesso!' : 'Unidade cadastrada com sucesso!');
-                            $('#buscar_unidades')[0].reset();
-                            table.ajax.reload();
-                            $('#unidadeModal').modal('hide');
+    // Gráfico de Interferências - Quantidade de Interferências cadastradas por Cômodo
+    const ctxInterferencia = document.getElementById('chartInterferencia').getContext('2d');
+    const chartInterferencia = new Chart(ctxInterferencia, {
+        type: 'bar',
+        data: {
+            labels: [],
+            datasets: [{
+                label: 'Interferências',
+                data: [],
+                backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                borderColor: 'rgba(255, 99, 132, 1)',
+                borderWidth: 1,
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { position: 'top' },
+                tooltip: {
+                    callbacks: {
+                        label: function(tooltipItem) {
+                            const datasetIndex = tooltipItem.datasetIndex;
+                            const dataIndex = tooltipItem.dataIndex;
+                            const interferencias = tooltipItem.chart.data.datasets[datasetIndex].data[dataIndex];
+                            
+                            return `Quantidade de Interferências: ${interferencias}`;
                         }
-                    },
-                    error: function(xhr, status, error) {
-                        mostrarMensagem('danger', 'Erro ao salvar unidade: ' + error);
-                    },
-                    complete: function () {
-                        $('#buscar_unidades')[0].reset();
-                        $('#salvar').removeClass('disabled');
                     }
-                });
-            } 
-        });
-        // Ajuste do evento de clique no botão "Salvar"
-        $('#salvar').click(function () {
-            $('#unidadeForm').submit(); // Submeter o formulário para acionar a validação
-        });
+                }
+            },
+            scales: { y: { beginAtZero: true } }
+        }
     });
-    
+
+    // Atualiza os gráficos quando a tabela for desenhada
+    table.on('draw', function () {
+        const data = table.rows({ search: 'applied' }).data();
+
+        // Atualiza o gráfico de Velocidade
+        const labelsVelocidade = [];
+        const valuesVelocidade = [];
+        const labelsMedia = [];
+        const valuesMedia = [];
+        const labelsSinal = [];
+        const valuesSinal = [];
+        const labelsInterferencia = [];
+        const valuesInterferencia = [];
+
+        // Variável para calcular média das velocidades de 2.4 e 5Ghz por cômodo
+        const comodosVelocidade = {};
+
+        for (let i = 0; i < data.length; i++) {
+            const comodo = data[i].COMODO;
+            const frequencia = data[i].FREQUENCIA;
+            const velocidade = parseFloat(data[i].VELOCIDADE);
+            const nivelSinal = parseFloat(data[i].NIVEL_SINAL);
+            const interferencias = data[i].INTERFERENCIA;
+
+            // Adiciona dados para gráfico de Velocidade (com base na frequencia)
+            labelsVelocidade.push(`${comodo} (${frequencia})`);
+            valuesVelocidade.push(velocidade);
+
+            // Média de Velocidade (2.4Ghz + 5Ghz / 2 para cada cômodo)
+            if (!comodosVelocidade[comodo]) {
+                comodosVelocidade[comodo] = { total: 0, count: 0 };
+            }
+            comodosVelocidade[comodo].total += velocidade;
+            comodosVelocidade[comodo].count++;
+
+            // Nível de Sinal (considera a frequência)
+            labelsSinal.push(`${comodo} (${frequencia})`);
+            valuesSinal.push(nivelSinal);
+
+            // Interferência
+            // Se a interferência não for "N/A", contar como interferência
+            if (interferencias !== "N/A") {
+                const interferenciaCount = interferencias.split(',').length;
+                labelsInterferencia.push(`${comodo} (${frequencia})`);
+                valuesInterferencia.push(interferenciaCount);
+            } else {
+                // Se for "N/A", tratar como 0 interferência
+                labelsInterferencia.push(`${comodo} (${frequencia})`);
+                valuesInterferencia.push(0);
+            }
+        }
+
+        // Calcula e atualiza a média de velocidade por cômodo
+        Object.keys(comodosVelocidade).forEach(comodo => {
+            const mediaVelocidade = comodosVelocidade[comodo].total / comodosVelocidade[comodo].count;
+            labelsMedia.push(comodo);
+            valuesMedia.push(mediaVelocidade);
+        });
+
+        // Atualiza o gráfico de Velocidade
+        chartVelocidade.data.labels = labelsVelocidade;
+        chartVelocidade.data.datasets[0].data = valuesVelocidade;
+        chartVelocidade.update();
+
+        // Atualiza o gráfico de Média de Velocidade
+        chartMediaVelocidade.data.labels = labelsMedia;
+        chartMediaVelocidade.data.datasets[0].data = valuesMedia;
+        chartMediaVelocidade.update();
+
+        // Atualiza o gráfico de Nível de Sinal
+        chartNivelSinal.data.labels = labelsSinal;
+        chartNivelSinal.data.datasets[0].data = valuesSinal;
+        chartNivelSinal.update();
+
+        // Atualiza o gráfico de Interferências (quantidade)
+        chartInterferencia.data.labels = labelsInterferencia;
+        chartInterferencia.data.datasets[0].data = valuesInterferencia;
+        chartInterferencia.update();
+    });
+
+    // Filtra e carrega os gráficos com os filtros do DataTables
+    $('#filtrar').click(() => table.ajax.reload());
+    $('#limpar').click(() => { $('#filtro_analise')[0].reset(); table.ajax.reload(); });
 </script>
 
-<?= $this->endsection() ?>
+<?= $this->endSection() ?>

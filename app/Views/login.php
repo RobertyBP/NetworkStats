@@ -11,15 +11,7 @@
 
 
 <body>
-    <!-- <header class="menu-bg fixed-top py-3">
-        <div class="container text-center">
-            <a href="/index.html" class="d-flex align-items-center justify-content-center">
-            <img src="<?= base_url('assets/img/wifi.svg') ?>" alt="Logo" width="32" height="32" />
-                <span class="ms-2">Voltar</span>
-            </a>
-        </div>
-    </header> -->
-
+    
     <main class="d-flex align-items-center justify-content-center min-vh-100" style="background-image: url(<?= base_url('assets/img/login.jpeg') ?>); background-position: center; background-size: cover;">
         <section class="login-container">
             <div class="login-box">

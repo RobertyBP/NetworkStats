@@ -27,8 +27,14 @@ class CreateRedeTable extends Migration
         ]);
 
         $this->forge->addPrimaryKey('COD_REDE');
-
         $this->forge->createTable('REDE', true);
+
+        # Insercao de dados padrao
+        $this->db->table('REDE')->insert([
+            'PACOTE_DADOS' => '500Mbps',
+            'NOME' => 'VIVO FIBRA (CLIENTE)',
+        ]);
+
     }
 
     public function down() {

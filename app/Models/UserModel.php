@@ -71,10 +71,10 @@ class UserModel extends Model
         $numbers = '0123456789';
         $specialChars = '!@#$%^&*()-_=+[]{}|;:,.<>?';
 
-        // Une todos os caracteres em uma string única.
+        # Une todos os caracteres em uma string única.
         $allChars = $upperChars . $lowerChars . $numbers . $specialChars;
 
-        // Certifica-se de que a senha tenha ao menos um de cada tipo de caractere.
+        # Certifica-se de que a senha tenha ao menos um de cada tipo de caractere.
         $password = [
             $upperChars[random_int(0, strlen($upperChars) - 1)],
             $lowerChars[random_int(0, strlen($lowerChars) - 1)],
@@ -82,13 +82,13 @@ class UserModel extends Model
             $specialChars[random_int(0, strlen($specialChars) - 1)],
         ];
 
-        // Preenche o restante da senha com caracteres aleatórios.
-        // 12 is the maximum length of the password
+        # Preenche o restante da senha com caracteres aleatórios.
+        # O tamanho maximo da senha gerada sera de 12 caracteres.
         for ($i = 4; $i < 12; $i++) {
             $password[] = $allChars[random_int(0, strlen($allChars) - 1)];
         }
 
-        // Embaralha os caracteres da senha.
+        # Embaralha os caracteres da senha.
         shuffle($password);
 
         return implode('', $password);
@@ -97,6 +97,7 @@ class UserModel extends Model
 
 
     public function findUserByEmail($email) {
+        # Busca um usuário pelo e-mail
 
         $sql_query = "SELECT USER.COD_USER,
                              USER.UUID,
@@ -112,7 +113,7 @@ class UserModel extends Model
     }
 
     public function findUserByID($id) {
-
+        # Busca um usuário pelo ID
         $sql_query = "SELECT USER.NOME,
                              USER.EMAIL,
                              USER.PERMISSAO
@@ -120,10 +121,10 @@ class UserModel extends Model
                       WHERE COD_USER = :id:";
 
         return $this->query($sql_query, ['id' => $id])->getResultArray()[0];
-
     }
 
     public function findUserByUUID($uuid) {
+        # Busca um usuário pelo UUID
 
         $sql_query = "SELECT USER.NOME,
                              USER.EMAIL,
@@ -136,6 +137,7 @@ class UserModel extends Model
     }
 
     public function verificaSenha($password) {
+        # Verifica se a senha atual do usuário é válida
 
         $sql_query = "SELECT USER.SENHA
                       FROM USER
@@ -159,7 +161,7 @@ class UserModel extends Model
                         
         $sql_from = "\nFROM USER";
 
-        // Verifica se existem filtros presentes referentes ao nome ou e-mail do usuário:
+        # Verifica se existem filtros presentes referentes ao nome ou e-mail do usuário:
         $found_where = false;
         $where_params = array();
         if(!empty($vars['nome'])) {
@@ -177,7 +179,7 @@ class UserModel extends Model
         if ($found_where)
             $sql_where = "\nWHERE " . implode(' AND ', $where_params);
 
-        // Verifica se existe alguma ordenação especificada na tabela e constrói a cláusula ORDER BY:
+        # Verifica se existe alguma ordenação especificada na tabela e constrói a cláusula ORDER BY:
         $order = $vars['order'];
         unset($vars['order']);
         $sql_orderBy = "";
@@ -188,7 +190,7 @@ class UserModel extends Model
             $sql_orderBy = "\nORDER BY " . $cols[$sort_col] . " " . $sort_dir . " ";
         }
 
-        // Ajustes de limit e offset para a paginação:
+        # Ajustes de limit e offset para a paginação:
         $limit = (int)$vars['length'];
         $offset = (int)$vars['start'];
         $sql_page = "\nLIMIT {$limit} OFFSET {$offset}";
@@ -196,7 +198,7 @@ class UserModel extends Model
         $sql_count = "SELECT COUNT(*) AS TOTAL " . $sql_from . $sql_where; // Máximo de linhas sem a paginação
         $sql_data = $sql_select . $sql_from . $sql_where . $sql_orderBy . $sql_page; // Tuplas retornadas
 
-        // Execução das queries:
+        # Execução das queries:
         $query_count = $this->query($sql_count, $vars)->getRowArray()['TOTAL'];
         $results = $this->query($sql_data, $vars)-> getResultArray();
 
@@ -237,6 +239,8 @@ class UserModel extends Model
     }
 
     public function changePassword($id, $senha) {
+        # Altera a senha do usuário
+
         $sql_query = "UPDATE USER
                       SET SENHA = :senha:
                       WHERE USER.COD_USER = :id:";

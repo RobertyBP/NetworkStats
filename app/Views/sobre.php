@@ -9,7 +9,7 @@
 <div class="container py-5 my-5 text-white">
     <div class="row justify-content-center">
         <div class="col-6 text-center">
-            <h2 class="mb-5 mt-5">
+            <h2 class="mb-5 mt-4">
                 Bem-vindo(a) <span style="color: var(--cor-fonte-home2)"><?= session('nome') ?></span>!
             </h2>
             <p>
@@ -18,7 +18,7 @@
             <p> 
                 O sistema visa prover uma fácil visualização das medidas de velocidade da rede WiFi para um cliente específico. O atual projeto também oferece um overview quanto ao nível de sinal, interferência e qualidade da rede analisada.
             </p>
-            <br><br><br>
+            <br>
             <p>Projeto desenvolvido por:
             <br>Denner Ribas Amaral - <strong><span style="color: var(--cor-fonte-home2)">2163241</span></strong>
             <br>Eduardo Gomes dos Santos - <strong><span style="color: var(--cor-fonte-home2)">2164418</span></strong>

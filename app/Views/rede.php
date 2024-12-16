@@ -8,24 +8,16 @@
 <?= $this->section('content') ?>
 
     <div class="container pt-5 mt-5 text-center text-white">
-        <h1 class="p-0 m-0 mt-5 fw-bolder">Gestão de Usuários</h1>
+        <h1 class="p-0 m-0 mt-5 fw-bolder">Gestão de Redes</h1>
     </div>
 
     <div class="container pt-5 mt-3">
-        <form id="busca_usuario" class="mb-4" method="post" accept-charset="utf-8">
+        <form id="busca_rede" class="mb-4" method="post" accept-charset="utf-8">
             <div class="row justify-content-center pb-3 align-items-center">
                 <div class="col-4 px-1">
                     <div class="input-group shadow-sm">
-                        <span class="input-group-text">Nome</span>
-                        <input type="text" class="form-control" name="filtroNome" id="filtroNome" maxlength="255">
-                    </div>
-                </div>
-            </div>
-            <div class="row justify-content-center pb-3 align-items-center">
-                <div class="col-4 px-1">
-                    <div class="input-group shadow-sm">
-                        <span class="input-group-text">E-mail</span>
-                        <input type="text" class="form-control" name="filtroEmail" id="filtroEmail" maxlength="150">
+                        <span class="input-group-text">Rede</span>
+                        <input type="text" class="form-control" name="filtroRede" id="filtroRede" maxlength="125">
                     </div>
                 </div>
                 <div class="col-auto px-1">
@@ -42,38 +34,27 @@
         </form>
 
         <!-- Modal Form -->
-        <div class="modal fade" id="userModal" tabindex="-1" role="dialog" aria-labelledby="userModalLabel" aria-hidden="true">
+        <div class="modal fade" id="redeModal" tabindex="-1" role="dialog" aria-labelledby="redeModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-xl">
                 <div class="modal-content">
                     <div class="modal-header bg-light">
-                        <h5 class="modal-title" id="userModalLabel"></h5>
+                        <h5 class="modal-title" id="redeModalLabel"></h5>
                     </div>
                     <div class="modal-body bg-light">
-                        <form id="user_form">
-                            <div class="row justify-content-center pb-3 align-items-center">
-                                <div class="col-5 px-1 pb-2">
-                                    <div class="input-group shadow-sm">
-                                        <span class="input-group-text">E-mail</span>
-                                        <input type="email" class="form-control" name="email" id="email" maxlength="150">
-                                    </div>
-                                </div>
-                            </div>
+                        <form id="rede_form">
                             <div class="row justify-content-center pb-3 align-items-center">
                                 <div class="col-5 px-1 pb-2">
                                     <div class="input-group shadow-sm">
                                         <span class="input-group-text">Nome</span>
-                                        <input type="text" class="form-control" name="nome" id="nome" minlength="7" maxlength="255">
+                                        <input type="text" class="form-control" name="nome" id="nome" maxlength="125">
                                     </div>
                                 </div>
                             </div>
-                            <div class="row justify-content-center pb-3 align-items-center">
-                                <div class="col-3 px-1 pb-2">
+                            <div class="row justify-content-center align-items-center">
+                                <div class="col-5 px-1 pb-2">
                                     <div class="input-group shadow-sm">
-                                        <label for="permissao" class="input-group-text">Permissão</label>
-                                        <select class="form-select" id="permissao" name="permissao">
-                                            <option selected value="0">Leitor</option>
-                                            <option value="1">Admin</option>
-                                        </select>
+                                        <span class="input-group-text">Velocidade</span>
+                                        <input type="text" class="form-control" name="velocidade" id="velocidade" maxlength="20">
                                     </div>
                                 </div>
                             </div>
@@ -96,8 +77,8 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <p>Tem certeza de que deseja excluir este usuário?</p>
-                        <p>Todos os dados relacionados a este usuário serão <strong>permanentemente</strong> excluídos.</p>
+                        <p>Tem certeza de que deseja excluir esta rede?</p>
+                        <p>Todos os dados relacionados a esta rede serão <strong>permanentemente</strong> excluídos.</p>
                         <p>Essa ação não poderá ser desfeita.</p>
                     </div>
                     <div class="modal-footer">
@@ -108,16 +89,14 @@
             </div>
         </div>
 
-        <div class="row justify-content-start small">
-            <div class="col-12 mb-5 p-3 table-responsive text-white">
-                <table id="listar_usuarios" class="table table-hover table-striped table-sm align-middle">
+        <div class="row justify-content-center small">
+            <div class="col-10 mb-5 p-3 table-responsive text-white">
+                <table id="listar_redes" class="table table-hover table-striped table-sm align-middle">
                     <thead style="background-color: #1E3E62;">
                         <tr>
-                            <th scope="col" class="col text-white">ID</th><!-- Apenas para validação interna. Não é exibido no DATATABLES -->
-                            <th scope="col" class="col text-white">UUID</th><!-- Apenas para validação interna. Não é exibido no DATATABLES -->
-                            <th scope="col" class="col text-white">Nome</th>
-                            <th scope="col" class="col text-white">E-mail</th>
-                            <th scope="col" class="col text-white">Permissão</th>
+                            <th scope="col" class="col text-white">COD_REDE</th><!-- Apenas para validação interna. Não é exibido no DATATABLES -->
+                            <th scope="col" class="col text-white">Rede</th>
+                            <th scope="col" class="col-2 text-white">Pacote de Dados</th>
                             <th scope="col" class="col-1 text-white">Ações</th>
                         </tr>
                     </thead>
@@ -144,15 +123,14 @@
 
         DataTable.Buttons.defaults.dom.button.className = 'btn'; // Sobrescreve a estilização padrão do datatables sobre os botões
 
-        var table = new DataTable('#listar_usuarios', {
+        var table = new DataTable('#listar_redes', {
         processing: true,
         serverSide: true,
         ajax: {
-            url: "<?= base_url("users/list/json") ?>",
+            url: "<?= base_url("redes/list/json") ?>",
             type: "POST",
             data: function(d) {
-                d.filtroNome = $("#filtroNome").val();
-                d.filtroEmail = $("#filtroEmail").val();
+                d.filtroRede = $("#filtroRede").val();
             }
         },
         info: true,
@@ -163,13 +141,13 @@
         layout: {
             topStart: {
                 buttons: [{
-                    text: '<span class="material-symbols-rounded align-bottom">person_add</span> Adicionar',
+                    text: '<span class="material-symbols-rounded align-bottom">add</span> Adicionar',
                     className: 'btn btn-primary px-3 py-1',
                     action: function (e, dt, node, config) {
-                        $('#userModalLabel').text('Adicionar Usuário');
-                        $('#user_form')[0].reset();
-                        $('#userModal').data('id', '');
-                        $('#userModal').modal('show');
+                        $('#redeModalLabel').text('Adicionar Rede');
+                        $('#rede_form')[0].reset();
+                        $('#redeModal').data('id', '');
+                        $('#redeModal').modal('show');
                     },
                 }]
             },
@@ -177,29 +155,18 @@
         },
         columnDefs: [{ targets: "_all", orderSequence: ['asc', 'desc'], className: "dt-body-left dt-head-left" }],
         columns: [
-            { data: 'COD_USER', visible: false, searchable: false, orderable: false },
-            { data: 'UUID', visible: false, searchable: false, orderable: false },
+            { data: 'COD_REDE', visible: false, searchable: false, orderable: false },
             { data: 'NOME' },
-            { data: 'EMAIL', orderable: false },
-            { data: 'PERMISSAO', searchable: false,
-                className: 'dt-body-center dt-head-center',
-                render: function (data, type, row) {
-                    if(row['PERMISSAO'] == '1') { // Admin
-                        return '<span class="material-symbols-rounded align-bottom text-primary btn tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Admin">shield_person</span>'
-                    } else if(row['PERMISSAO'] == '0'){ // Leitor
-                        return '<span class="material-symbols-rounded align-bottom text-primary btn" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Leitor">visibility</span>'
-                    }
-                }
-            },
+            { data: 'PACOTE_DADOS', orderable: false },
             {
                 data: 'ACOES', 
                 searchable: false, 
                 orderable: false, 
                 className: 'dt-body-center dt-head-center',
                 render: function (data, type, row) {
-                    return '<a class="btn btn-sm btn-outline-primary p-0 mx-1 editar-usuario" data-id="' + row['COD_USER'] + '">' +
+                    return '<a class="btn btn-sm btn-outline-primary p-0 mx-1 editar-rede" data-id="' + row['COD_REDE'] + '">' +
                                 '<span class="material-symbols-rounded align-middle tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Editar">edit</span></a>' +
-                            '<a class="btn btn-sm btn-outline-danger p-0 mx-1 deletar-usuario" data-id="' + row['COD_USER'] + '">' +
+                            '<a class="btn btn-sm btn-outline-danger p-0 mx-1 deletar-rede" data-id="' + row['COD_REDE'] + '">' +
                                 '<span class="material-symbols-rounded align-middle tt" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Deletar">delete</span></a>';
                 },
             },
@@ -219,35 +186,34 @@
 
         // Limpar os filtros do datatables
         $('#limpar').on('click', function(){
-            $('#busca_usuario')[0].reset();
+            $('#busca_rede')[0].reset();
             table.ajax.reload(); // Table reload
         });
 
         $('#cancelar').on('click', function () {
-            $('#userModal').modal('hide');
+            $('#redeModal').modal('hide');
         });
 
         // Abre o modal de Edição
-        $('#listar_usuarios').on('click', '.editar-usuario', function(e) {
+        $('#listar_redes').on('click', '.editar-rede', function(e) {
             e.preventDefault();
-            $('#user_form')[0].reset();
+            $('#rede_form')[0].reset();
             var rowData = table.row($(this).parents('tr')).data();
-            $('#userModalLabel').text('Editar Usuário');
+            $('#redeModalLabel').text('Editar Rede');
 
             $('#nome').val(rowData['NOME']);
-            $('#email').val(rowData['EMAIL']);
-            $('#permissao').val(rowData['PERMISSAO']);
-            $('#userModal').data('id', rowData['COD_USER']);
-            $('#userModal').modal('show');
+            $('#velocidade').val(rowData['PACOTE_DADOS']);
+            $('#redeModal').data('id', rowData['COD_REDE']);
+            $('#redeModal').modal('show');
         });
 
-        // Abre o modal de confirmação de exclusão do usuário
-        $('#listar_usuarios').on('click', '.deletar-usuario', function(e) {
+        // Abre o modal de confirmação de exclusão da rede
+        $('#listar_redes').on('click', '.deletar-rede', function(e) {
 
             e.preventDefault();
             var rowData = table.row($(this).parents('tr')).data();
 
-            $('#confirmDeleteModal').data('id', rowData['COD_USER']);
+            $('#confirmDeleteModal').data('id', rowData['COD_REDE']);
             $('#confirmDeleteModal').modal('show');
         });
 
@@ -255,8 +221,8 @@
         $('#confirmDelete').on('click', function() {
             $('#confirmDelete').addClass('disabled');
 
-            var userID = $('#confirmDeleteModal').data('id');
-            var deleteURL = "<?= base_url('users/delete/') ?>" + userID;
+            var redeID = $('#confirmDeleteModal').data('id');
+            var deleteURL = "<?= base_url('redes/delete/') ?>" + redeID;
             $.ajax({
                 url: deleteURL, 
                 type: "POST",
@@ -264,7 +230,7 @@
                     if (response.status === 'error') {
                         mostrarMensagem('danger', response.message);
                     } else {
-                        mostrarMensagem('success', 'O usuário foi excluído com sucesso!');
+                        mostrarMensagem('success', 'A rede foi excluída com sucesso!');
                     }
                 },
                 error: function (response) {
@@ -283,40 +249,28 @@
 
         $(document).ready(function () {
             // Validação dos campos do formulário
-            validator = $('#user_form').validate({
+            validator = $('#rede_form').validate({
                 onfocusout: false,
                 onkeyup: false,
                 onclick: false,
                 rules: {
                     nome: {
                         required: true,
-                        maxlength: 150,
-                    },
-                    email: {
-                        required: true,
-                        email: true,
-                        minlength: 8,
                         maxlength: 125,
                     },
-                    permissao: {
+                    velocidade: {
                         required: true,
-                        range: [0, 1],
+                        maxlength: 20,
                     },
                 },
                 messages: {
                     nome: {
-                        required: "O Nome do Usuário é obrigatório.",
-                        maxlength: "O nome não deve ter mais de {0} caracteres.",
+                        required: "O Nome da Rede é obrigatório.",
+                        maxlength: "O Nome da Rede não deve ter mais de {0} caracteres.",
                     },
-                    email: {
-                        required: "O E-mail do Usuário é obrigatório.",
-                        email: "O E-mail do Usuário deve conter um endereço de e-mail válido.",
-                        minlength: "O E-mail deve conter no mínimo {0} caracteres.",
-                        maxlength: "O E-mail deve conter no máximo {0} caracteres.",
-                    },
-                    permissao: {
-                        required: "O nível de permissão do usuário é obrigatório.",
-                        range: "O nível de permissão do usuário é inválido.",
+                    velocidade: {
+                        required: "A Velocidade da Rede é obrigatória.",
+                        maxlength: "A Velocidade da Rede não deve ter mais de {0} caracteres.",
                     },
                 },
                 invalidHandler: function (e, validator) {
@@ -338,12 +292,11 @@
                     // Se a validação é bem-sucedida, envia o formulário.
                     var formData = {
                         nome: $('#nome').val(),
-                        email: $('#email').val(),
-                        permissao: $('#permissao').val(),
+                        velocidade: $('#velocidade').val(),
                     };
 
-                    var userId = $('#userModal').data('id');
-                    var url = userId ? "<?= base_url('users/edit/') ?>" + userId : "<?= base_url('users/add') ?>";
+                    var redeID = $('#redeModal').data('id');
+                    var url = redeID ? "<?= base_url('redes/edit/') ?>" + redeID : "<?= base_url('redes/add') ?>";
                     $('#salvar').addClass('disabled');
 
                     $.ajax({
@@ -356,26 +309,22 @@
                                 mostrarMensagem('danger', response.message);
                             } else {
 
-                                if(userId) {
-                                    mostrarMensagem('success', 'O usuário foi atualizado com sucesso!');
+                                if(redeID) {
+                                    mostrarMensagem('success', 'A rede foi atualizada com sucesso!');
                                 } else {
-                                    // Copia a senha para o clipboard
-                                    var tempPassword = response.data;
-                                    copyToClipboard(tempPassword);
-
-                                    mostrarMensagem('success', 'O usuário foi adicionado com sucesso. A primeira senha de acesso do usuário foi copiada para o seu clipboard!');
+                                    mostrarMensagem('success', 'A rede foi adicionada com sucesso!');
                                 }
 
-                                $('#busca_usuario')[0].reset();
+                                $('#busca_rede')[0].reset();
                                 table.ajax.reload();
-                                $('#userModal').modal('hide');
+                                $('#redeModal').modal('hide');
                             }
                         },
                         error: function (response) {
                             mostrarMensagem('danger', response.message);
                         },
                         complete: function () {
-                            $('#busca_usuario')[0].reset();
+                            $('#busca_rede')[0].reset();
                             $('#salvar').removeClass('disabled');
                         }
                     });
@@ -383,12 +332,8 @@
             });
         });
 
-        function copyToClipboard(value) {
-            navigator.clipboard.writeText(value);
-        }
-
         $('#salvar').click(function () {
-            $('#user_form').submit(); // Form submit -> Acionamento da validação
+            $('#rede_form').submit(); // Form submit -> Acionamento da validação
         });
 
 
