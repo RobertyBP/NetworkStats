@@ -51,6 +51,20 @@ class CreateUserTable extends Migration
 
     public function down()
     {
-        $this->forge->dropTable('USER', true);
+        $this->db->table('USER')->insert($defaultUser);
+        
+        $userModel = new UserModel();
+
+        $defaultUser = [
+            'UUID' => $userModel->generateUUID(),
+            'EMAIL' => 'admin@admin.com',
+            'NOME' => 'SYS ADMIN',
+            'SENHA' => password_hash('adminroot', PASSWORD_DEFAULT),
+            'PERMISSAO' => '1',
+        ];
+
+        $userModel->inserirUsuario($defaultUser);
     }
+
+   
 }
